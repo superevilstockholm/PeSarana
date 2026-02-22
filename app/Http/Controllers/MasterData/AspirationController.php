@@ -5,9 +5,14 @@ namespace App\Http\Controllers\MasterData;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 
 // Models
+use App\Models\MasterData\Category;
 use App\Models\MasterData\Aspiration;
+
+// Enums
+use App\Enums\AspirationStatusEnum;
 
 class AspirationController extends Controller
 {
@@ -37,17 +42,32 @@ class AspirationController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
-        //
+        $categories = Category::all();
+        return view('pages.dashboard.student.aspiration.create', [
+            'meta' => [
+                'sidebarItems' => studentSidebarItems(),
+            ],
+            'categories' => $categories,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'location' => ['required', 'string', 'max:255'],
+            'category_id' => ['required', 'exists:categories,id'],
+        ]);
+        $validated['status'] = AspirationStatusEnum::PENDING;
+        $validated['student_id'] = $request->user()->student->id;
+        Aspiration::create($validated);
+        return redirect()->route('dashboard.student.aspiration.index')->with('success', 'Berhasil membuat aspirasi!');
     }
 
     /**
