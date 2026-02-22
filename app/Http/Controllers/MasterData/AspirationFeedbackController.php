@@ -59,8 +59,15 @@ class AspirationFeedbackController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(AspirationFeedback $aspirationFeedback)
+    public function destroy(AspirationFeedback $aspirationFeedback): RedirectResponse
     {
-        //
+        $aspiration = $aspirationFeedback->aspiration;
+        if (in_array($aspiration->status, [AspirationStatusEnum::REJECTED, AspirationStatusEnum::ON_GOING])) {
+            $aspiration->update(['status' => AspirationStatusEnum::PENDING]);
+        } else if ($aspiration->status === AspirationStatusEnum::COMPLETED) {
+            $aspiration->update(['status' => AspirationStatusEnum::ON_GOING]);
+        }
+        $aspirationFeedback->delete();
+        return redirect()->route('dashboard.admin.master-data.aspirations.show', $aspiration->id)->with('success', 'Berhasil menghapus feedback.');
     }
 }
