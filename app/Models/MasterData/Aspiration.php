@@ -19,7 +19,7 @@ class Aspiration extends Model
 
     protected $fillable = [
         'title',
-        'description',
+        'content',
         'location',
         'status',
         'student_id',

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('aspirations', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('description')->nullable();
+            $table->text('content')->nullable();
             $table->string('location');
             $table->string('status')->default('pending');
             $table->foreignId('student_id')->constrained()->cascadeOnDelete();

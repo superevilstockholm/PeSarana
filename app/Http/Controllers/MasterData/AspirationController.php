@@ -62,7 +62,7 @@ class AspirationController extends Controller
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
+            'content' => ['nullable', 'string'],
             'location' => ['required', 'string', 'max:255'],
             'category_id' => ['required', 'exists:categories,id'],
             'aspiration_images' => ['nullable', 'array'],
@@ -134,7 +134,7 @@ class AspirationController extends Controller
         }
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
+            'content' => ['nullable', 'string'],
             'location' => ['required', 'string', 'max:255'],
             'category_id' => ['required', 'exists:categories,id'],
             'aspiration_images' => ['nullable', 'array'],
