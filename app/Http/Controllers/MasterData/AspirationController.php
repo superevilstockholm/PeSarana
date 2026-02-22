@@ -79,7 +79,7 @@ class AspirationController extends Controller
                 ]);
             }
         }
-        return redirect()->route('dashboard.student.aspiration.index')->with('success', 'Berhasil membuat aspirasi!');
+        return redirect()->route('dashboard.student.aspirations.index')->with('success', 'Berhasil membuat aspirasi!');
     }
 
     /**
@@ -109,7 +109,7 @@ class AspirationController extends Controller
             abort(403, 'Forbidden');
         }
         if ($aspiration->status !== AspirationStatusEnum::PENDING) {
-            return redirect()->route('dashboard.student.aspiration.show', $aspiration)->with('error', 'Aspirasi tidak dapat diubah!');
+            return redirect()->route('dashboard.student.aspirations.show', $aspiration)->with('error', 'Aspirasi tidak dapat diubah!');
         }
         $categories = Category::all();
         return view('pages.dashboard.student.aspiration.edit', [
@@ -130,7 +130,7 @@ class AspirationController extends Controller
             abort(403, 'Forbidden');
         }
         if ($aspiration->status !== AspirationStatusEnum::PENDING) {
-            return redirect()->route('dashboard.student.aspiration.show', $aspiration)->with('error', 'Aspirasi tidak dapat diubah!');
+            return redirect()->route('dashboard.student.aspirations.show', $aspiration)->with('error', 'Aspirasi tidak dapat diubah!');
         }
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -160,7 +160,7 @@ class AspirationController extends Controller
                 ]);
             }
         }
-        return redirect()->route('dashboard.student.aspiration.index')->with('success', 'Berhasil mengubah aspirasi!');
+        return redirect()->route('dashboard.student.aspirations.index')->with('success', 'Berhasil mengubah aspirasi!');
     }
 
     /**
@@ -172,11 +172,11 @@ class AspirationController extends Controller
             abort(403, 'Forbidden');
         }
         if ($aspiration->aspiration_images()->count() > 0) {
-            foreach ($aspiration->images as $image) {
-                Storage::disk('public')->delete($image->path);
+            foreach ($aspiration->aspiration_images as $image) {
+                Storage::disk('public')->delete($image->image_path);
             }
         }
         $aspiration->delete();
-        return redirect()->route('dashboard.student.aspiration.index')->with('success', 'Berhasil menghapus aspirasi!');
+        return redirect()->route('dashboard.student.aspirations.index')->with('success', 'Berhasil menghapus aspirasi!');
     }
 }
