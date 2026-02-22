@@ -32,11 +32,15 @@ class AuthController extends Controller
         if (!Auth::attempt($validated)) {
             return back()->with('error', 'Email atau password salah')->withInput($request->except('password'));
         }
-        return redirect()->route('dashboard.' . Auth::user()->role->value . '.index')->with('success', 'Berhasil masuk!');
+        $request->session()->regenerate();
+        return redirect()->route('dashboard.' . $request->user()->role->value . '.index')->with('success', 'Berhasil masuk!');
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request): RedirectResponse
     {
-
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('login')->with('success', 'Berhasil keluar!');
     }
 }
