@@ -33,6 +33,12 @@ Route::middleware(['auth'])->group(function () {
                     ]
                 ]);
             })->name('index');
+            // Master Data
+            Route::prefix('master-data')->name('master-data.')->group(function () {
+                Route::resource('aspirations', AspirationController::class)->parameters([
+                    'aspirations' => 'aspiration'
+                ])->only(['index', 'show', 'destroy']);
+            });
         });
         // Student
         Route::middleware(['role:student'])->prefix('student')->name('student.')->group(function () {
