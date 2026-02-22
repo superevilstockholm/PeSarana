@@ -133,8 +133,9 @@ class AspirationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Aspiration $aspiration)
+    public function destroy(Aspiration $aspiration): RedirectResponse
     {
-        //
+        $aspiration->delete();
+        return redirect()->route('dashboard.student.aspiration.index')->with('success', 'Berhasil menghapus aspirasi!');
     }
 }
