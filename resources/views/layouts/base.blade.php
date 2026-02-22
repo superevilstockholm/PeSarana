@@ -11,7 +11,8 @@
 @endif
 @endsection
 @push('css')
-
+<link rel="stylesheet" href="{{ asset('static/css/bootstrap-icons/bootstrap-icons.min.css') }}">
+<link rel="stylesheet" href="{{ asset('static/css/custom.css') }}">
 @endpush
 @push('js')
 
