@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 
 // Middlewares
 use App\Http\Middleware\Auth\RoleMiddleware;
+use App\Http\Middleware\Auth\RedirectIfAuthenticatedMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -16,7 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'role' => RoleMiddleware::class,
-        ])
+            'guest' => RedirectIfAuthenticatedMiddleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
