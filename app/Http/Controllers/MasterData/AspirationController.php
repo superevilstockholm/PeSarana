@@ -73,9 +73,19 @@ class AspirationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Aspiration $aspiration)
+    public function show(Aspiration $aspiration, Request $request): View
     {
-        //
+        $user_role = $request->user()->role->value;
+        return view($user_role === 'admin'
+            ? 'pages.dashboard.admin.master-data.aspiration.show'
+            : 'pages.dashboard.student.aspiration.show', [
+            'meta' => [
+                'sidebarItems' => $user_role === 'admin'
+                    ? adminSidebarItems()
+                    : studentSidebarItems(),
+            ],
+            'aspiration' => $aspiration->load(['student', 'category', 'feedbacks', 'feedbacks.user']),
+        ]);
     }
 
     /**
