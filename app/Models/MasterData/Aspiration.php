@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 // Models
 use App\Models\MasterData\Student;
 use App\Models\MasterData\Category;
+use App\Models\MasterData\AspirationFeedback;
 
 // Enums
 use App\Enums\AspirationStatusEnum;
@@ -36,5 +37,10 @@ class Aspiration extends Model
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function feedbacks()
+    {
+        return $this->hasMany(AspirationFeedback::class, 'aspiration_id');
     }
 }

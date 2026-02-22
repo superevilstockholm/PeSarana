@@ -11,6 +11,7 @@ use App\Enums\RoleEnum;
 
 // Models
 use App\Models\MasterData\Student;
+use App\Models\MasterData\AspirationFeedback;
 
 class User extends Authenticatable
 {
@@ -56,5 +57,10 @@ class User extends Authenticatable
     public function student()
     {
         return $this->hasOne(Student::class);
+    }
+
+    public function feedbacks()
+    {
+        return $this->hasMany(AspirationFeedback::class);
     }
 }
