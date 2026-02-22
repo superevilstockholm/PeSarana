@@ -65,10 +65,20 @@ class AspirationController extends Controller
             'description' => ['nullable', 'string'],
             'location' => ['required', 'string', 'max:255'],
             'category_id' => ['required', 'exists:categories,id'],
+            'aspiration_images' => ['nullable', 'array'],
+            'aspiration_images.*' => ['image', 'mimes:jpg,jpeg,png,svg,webp', 'max:2048'],
         ]);
         $validated['status'] = AspirationStatusEnum::PENDING;
         $validated['student_id'] = $request->user()->student->id;
-        Aspiration::create($validated);
+        $aspiration = Aspiration::create($validated);
+        if ($request->hasFile('aspiration_images')) {
+            foreach ($request->file('aspiration_images') as $image) {
+                $path = $image->store('aspiration_images', 'public');
+                $aspiration->images()->create([
+                    'image_path' => $path,
+                ]);
+            }
+        }
         return redirect()->route('dashboard.student.aspiration.index')->with('success', 'Berhasil membuat aspirasi!');
     }
 
