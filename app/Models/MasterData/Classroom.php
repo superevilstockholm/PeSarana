@@ -12,7 +12,7 @@ class Classroom extends Model
     protected $table = 'classrooms';
 
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     public function students()
