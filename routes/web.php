@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
-
-});
+    return view('pages.index');
+})->name('index');
 
 Route::middleware(['guest'])->group(function () {
     // Auth
@@ -23,11 +23,15 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
         // Admin
         Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
+            Route::get('/', function () {
 
+            })->name('index');
         });
         // Student
         Route::middleware(['role:student'])->prefix('student')->name('student.')->group(function () {
+            Route::get('/', function () {
 
+            })->name('index');
         });
     });
 });
