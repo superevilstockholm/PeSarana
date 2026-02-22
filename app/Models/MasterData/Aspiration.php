@@ -40,12 +40,12 @@ class Aspiration extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
-    public function feedbacks()
+    public function aspiration_feedbacks()
     {
         return $this->hasMany(AspirationFeedback::class, 'aspiration_id');
     }
 
-    public function images()
+    public function aspiration_images()
     {
         return $this->hasMany(AspirationImage::class, 'aspiration_id');
     }

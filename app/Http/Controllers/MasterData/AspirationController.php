@@ -74,7 +74,7 @@ class AspirationController extends Controller
         if ($request->hasFile('aspiration_images')) {
             foreach ($request->file('aspiration_images') as $image) {
                 $path = $image->store('aspiration_images', 'public');
-                $aspiration->images()->create([
+                $aspiration->aspiration_images()->create([
                     'image_path' => $path,
                 ]);
             }
@@ -137,8 +137,29 @@ class AspirationController extends Controller
             'description' => ['nullable', 'string'],
             'location' => ['required', 'string', 'max:255'],
             'category_id' => ['required', 'exists:categories,id'],
+            'aspiration_images' => ['nullable', 'array'],
+            'aspiration_images.*' => ['image', 'mimes:jpg,jpeg,png,svg,webp', 'max:2048'],
+            'delete_images' => ['nullable', 'array'],
+            'delete_images.*' => ['exists:aspiration_images,id'],
         ]);
         $aspiration->update($validated);
+        if (!empty($validated['deleted_images'])) {
+            $imagesToDelete = $aspiration->aspiration_images()
+                ->whereIn('id', $validated['deleted_images'])
+                ->get();
+            foreach ($imagesToDelete as $image) {
+                Storage::disk('public')->delete($image->image_path);
+                $image->delete();
+            }
+        }
+        if ($request->hasFile('aspiration_images')) {
+            foreach ($request->file('aspiration_images') as $image) {
+                $path = $image->store('aspiration_images', 'public');
+                $aspiration->aspiration_images()->create([
+                    'image_path' => $path,
+                ]);
+            }
+        }
         return redirect()->route('dashboard.student.aspiration.index')->with('success', 'Berhasil mengubah aspirasi!');
     }
 
@@ -150,9 +171,9 @@ class AspirationController extends Controller
         if ($request->user()->role === RoleEnum::STUDENT && $request->user()->student->id !== $aspiration->student_id) {
             abort(403, 'Forbidden');
         }
-        if ($aspiration->images()->count() > 0) {
+        if ($aspiration->aspiration_images()->count() > 0) {
             foreach ($aspiration->images as $image) {
-                Storage::delete($image->path);
+                Storage::disk('public')->delete($image->path);
             }
         }
         $aspiration->delete();
