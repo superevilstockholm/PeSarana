@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 // Auth Controller
 use App\Http\Controllers\AuthController;
 
+// Master Data Controllers
+use App\Http\Controllers\MasterData\AspirationController;
+
 Route::get('/', function () {
     return view('pages.index');
 })->name('index');
@@ -40,6 +43,9 @@ Route::middleware(['auth'])->group(function () {
                     ]
                 ]);
             })->name('index');
+            Route::resource('aspirations', AspirationController::class)->parameters([
+                'aspirations' => 'aspiration'
+            ]);
         });
     });
 });
