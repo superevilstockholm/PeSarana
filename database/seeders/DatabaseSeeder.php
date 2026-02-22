@@ -2,9 +2,15 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+// Models
+use App\Models\User;
+
+// Enums
+use App\Enums\RoleEnum;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,11 +21,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Admin user
+        User::updateOrCreate([
+            'email' => config('admin.email'),
+        ], [
+            'name' => config('admin.name'),
+            'email' => config('admin.email'),
+            'password' => Hash::make(config('admin.password')),
+            'role' => RoleEnum::ADMIN,
+            'email_verified_at' => now(),
         ]);
     }
 }
