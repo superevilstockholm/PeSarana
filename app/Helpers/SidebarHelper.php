@@ -20,6 +20,7 @@ if (!function_exists('studentSidebarItems')) {
         return [
             'main' => [
                 ['label' => 'dashboard', 'icon' => 'ti ti-dashboard', 'route' => 'dashboard.student.index', 'active_pattern' => 'dashboard.student.index'],
+                ['label' => 'aspirations', 'icon' => 'ti ti-flag', 'route' => 'dashboard.student.aspirations.index', 'active_pattern' => 'dashboard.student.aspirations.*'],
             ],
         ];
     }

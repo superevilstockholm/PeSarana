@@ -3,8 +3,10 @@
 @section('content')
     <x-alerts :errors="$errors" />
     @php
-        use Illuminate\Contracts\Pagination\LengthAwarePaginator;
         use Illuminate\Support\Str;
+        use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+        // Enums
+        use App\Enums\AspirationStatusEnum;
     @endphp
     <div class="row mb-4">
         <div class="col">
@@ -15,6 +17,12 @@
                         <h3 class="p-0 m-0 mb-1 fw-semibold">Data Aspirasi</h3>
                         <p class="p-0 m-0 fw-medium text-muted">Manajemen data aspirasi siswa.</p>
                     </div>
+                    <div class="d-flex align-items-center">
+                        <a href="{{ route('dashboard.student.aspirations.create') }}"
+                            class="btn btn-sm btn-primary px-4 rounded-pill m-0">
+                            <i class="ti ti-plus me-1"></i> Tambah Aspirasi
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -23,7 +31,7 @@
         <div class="col">
             <div class="card my-0">
                 <div class="card-body">
-                    <form method="GET" action="{{ route('dashboard.admin.master-data.aspirations.index') }}" id="filterForm">
+                    <form method="GET" action="{{ route('dashboard.student.aspirations.index') }}" id="filterForm">
                         <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-3 gap-2 gap-md-0">
                             <div class="d-flex align-items-center">
                                 @php
@@ -61,7 +69,6 @@
                                     <th>Judul</th>
                                     <th>Konten</th>
                                     <th>Status</th>
-                                    <th>Dibuat Oleh</th>
                                     <th>Dibuat Pada</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
@@ -82,7 +89,6 @@
                                         <td>{{ $aspiration->title ?? '-' }}</td>
                                         <td>{{ $aspiration->content ? Str::limit($aspiration->content, 60, '...') : '-' }}</td>
                                         <td>{{ $aspiration->status?->label() ?? '-' }}</td>
-                                        <td>{{ $aspiration->student?->name ? ucwords(strtolower($aspiration->student->name)) : '-' }}</td>
                                         <td>{{ $aspiration->created_at?->format('d M Y H:i') }}</td>
                                         <td class="text-center">
                                             <div class="dropdown">
@@ -92,11 +98,17 @@
                                                 </button>
                                                 <div class="dropdown-menu dropdown-menu-end">
                                                     <a class="dropdown-item"
-                                                        href="{{ route('dashboard.admin.master-data.aspirations.show', $aspiration->id) }}">
+                                                        href="{{ route('dashboard.student.aspirations.show', $aspiration->id) }}">
                                                         <i class="ti ti-eye me-1"></i> Lihat
                                                     </a>
+                                                    @if ($aspiration->status === AspirationStatusEnum::PENDING)
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('dashboard.student.aspirations.edit', $aspiration->id) }}">
+                                                            <i class="ti ti-pencil me-1"></i> Edit
+                                                        </a>
+                                                    @endif
                                                     <form id="form-delete-{{ $aspiration->id }}"
-                                                        action="{{ route('dashboard.admin.master-data.aspirations.destroy', $aspiration->id) }}"
+                                                        action="{{ route('dashboard.student.aspirations.destroy', $aspiration->id) }}"
                                                         method="POST">
                                                         @csrf
                                                         @method('DELETE')
@@ -111,7 +123,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="text-center">
+                                        <td colspan="7" class="text-center">
                                             <div class="alert alert-warning my-2" role="alert">
                                                 Tidak ada data aspirasi yang ditemukan dengan kriteria tersebut.
                                             </div>

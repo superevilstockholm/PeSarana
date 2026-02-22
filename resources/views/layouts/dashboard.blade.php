@@ -71,6 +71,7 @@
 <link rel="stylesheet" href="{{ asset('static/css/custom.css') }}">
 @endpush
 @push('js')
+<script src="{{ asset('static/js/sweetalert2.min.js') }}"></script>
 <script src="{{ asset('static/js/plugins/popper.min.js') }}"></script>
 <script src="{{ asset('static/js/plugins/simplebar.min.js') }}"></script>
 <script src="{{ asset('static/js/plugins/feather.min.js') }}"></script>
