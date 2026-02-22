@@ -96,7 +96,7 @@ class AspirationController extends Controller
                     ? adminSidebarItems()
                     : studentSidebarItems(),
             ],
-            'aspiration' => $aspiration->load(['student', 'category', 'feedbacks', 'feedbacks.user']),
+            'aspiration' => $aspiration->load(['student', 'category', 'aspiration_feedbacks', 'aspiration_feedbacks.user']),
         ]);
     }
 

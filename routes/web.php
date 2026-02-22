@@ -38,6 +38,9 @@ Route::middleware(['auth'])->group(function () {
                 Route::resource('aspirations', AspirationController::class)->parameters([
                     'aspirations' => 'aspiration'
                 ])->only(['index', 'show', 'destroy']);
+                Route::resource('aspiration-feedbacks', null)->parameters([
+                    'aspiration-feedbacks' => 'aspirationFeedback'
+                ]);
             });
         });
         // Student

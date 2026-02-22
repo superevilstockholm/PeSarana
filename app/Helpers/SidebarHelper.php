@@ -6,7 +6,10 @@ if (!function_exists('adminSidebarItems')) {
         return [
             'main' => [
                 ['label' => 'dashboard', 'icon' => 'ti ti-dashboard', 'route' => 'dashboard.admin.index', 'active_pattern' => 'dashboard.admin.index'],
-            ]
+            ],
+            'master data' => [
+                ['label' => 'aspirations', 'icon' => 'ti ti-flag', 'route' => 'dashboard.admin.master-data.aspirations.index', 'active_pattern' => 'dashboard.admin.master-data.aspirations.*'],
+            ],
         ];
     }
 }
@@ -17,7 +20,7 @@ if (!function_exists('studentSidebarItems')) {
         return [
             'main' => [
                 ['label' => 'dashboard', 'icon' => 'ti ti-dashboard', 'route' => 'dashboard.student.index', 'active_pattern' => 'dashboard.student.index'],
-            ]
+            ],
         ];
     }
 }
