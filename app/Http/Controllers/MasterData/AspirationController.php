@@ -6,6 +6,7 @@ use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 
 // Models
 use App\Models\MasterData\Category;
@@ -13,6 +14,7 @@ use App\Models\MasterData\Aspiration;
 
 // Enums
 use App\Enums\AspirationStatusEnum;
+use App\Enums\RoleEnum;
 
 class AspirationController extends Controller
 {
@@ -133,8 +135,16 @@ class AspirationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Aspiration $aspiration): RedirectResponse
+    public function destroy(Aspiration $aspiration, Request $request): RedirectResponse
     {
+        if ($request->user()->role === RoleEnum::STUDENT && $request->user()->student->id !== $aspiration->student_id) {
+            abort(403, 'Forbidden');
+        }
+        if ($aspiration->images()->count() > 0) {
+            foreach ($aspiration->images as $image) {
+                Storage::delete($image->path);
+            }
+        }
         $aspiration->delete();
         return redirect()->route('dashboard.student.aspiration.index')->with('success', 'Berhasil menghapus aspirasi!');
     }
