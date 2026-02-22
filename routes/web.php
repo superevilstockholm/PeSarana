@@ -24,13 +24,21 @@ Route::middleware(['auth'])->group(function () {
         // Admin
         Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
             Route::get('/', function () {
-                return view('pages.dashboard.admin.index');
+                return view('pages.dashboard.admin.index', [
+                    'meta' => [
+                        'sidebarItems' => adminSidebarItems(),
+                    ]
+                ]);
             })->name('index');
         });
         // Student
         Route::middleware(['role:student'])->prefix('student')->name('student.')->group(function () {
             Route::get('/', function () {
-                return view('pages.dashboard.student.index');
+                return view('pages.dashboard.student.index', [
+                    'meta' => [
+                        'sidebarItems' => studentSidebarItems(),
+                    ]
+                ]);
             })->name('index');
         });
     });
