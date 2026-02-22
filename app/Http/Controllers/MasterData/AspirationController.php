@@ -143,9 +143,9 @@ class AspirationController extends Controller
             'delete_images.*' => ['exists:aspiration_images,id'],
         ]);
         $aspiration->update($validated);
-        if (!empty($validated['deleted_images'])) {
+        if (!empty($validated['delete_images'])) {
             $imagesToDelete = $aspiration->aspiration_images()
-                ->whereIn('id', $validated['deleted_images'])
+                ->whereIn('id', $validated['delete_images'])
                 ->get();
             foreach ($imagesToDelete as $image) {
                 Storage::disk('public')->delete($image->image_path);
