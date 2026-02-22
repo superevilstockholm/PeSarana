@@ -136,7 +136,7 @@
                             <input type="hidden" name="aspiration_id" value="{{ $aspiration->id }}">
                             <div class="mb-3">
                                 <label class="form-label fw-medium">Isi Feedback</label>
-                                <textarea name="content" rows="4" class="form-control" required>{{ old('content') }}</textarea>
+                                <textarea name="content" rows="4" class="form-control">{{ old('content') }}</textarea>
                             </div>
                             @if ($aspiration->status === AspirationStatusEnum::PENDING)
                                 <div class="mb-3">

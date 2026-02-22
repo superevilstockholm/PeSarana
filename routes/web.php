@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 
 // Master Data Controllers
 use App\Http\Controllers\MasterData\AspirationController;
+use App\Http\Controllers\MasterData\AspirationFeedbackController;
 
 Route::get('/', function () {
     return view('pages.index');
@@ -38,9 +39,9 @@ Route::middleware(['auth'])->group(function () {
                 Route::resource('aspirations', AspirationController::class)->parameters([
                     'aspirations' => 'aspiration'
                 ])->only(['index', 'show', 'destroy']);
-                Route::resource('aspiration-feedbacks', null)->parameters([
+                Route::resource('aspiration-feedbacks', AspirationFeedbackController::class)->parameters([
                     'aspiration-feedbacks' => 'aspirationFeedback'
-                ]);
+                ])->only(['store', 'update', 'destroy']);
             });
         });
         // Student

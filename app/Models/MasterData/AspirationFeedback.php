@@ -16,7 +16,7 @@ class AspirationFeedback extends Model
     protected $table = 'aspiration_feedbacks';
 
     protected $fillable = [
-        'description',
+        'content',
         'status',
         'user_id',
         'aspiration_id',
