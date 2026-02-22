@@ -91,9 +91,22 @@ class AspirationController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Aspiration $aspiration)
+    public function edit(Aspiration $aspiration, Request $request): View | RedirectResponse
     {
-        //
+        if ($request->user()->student->id !== $aspiration->student_id) {
+            abort(403, 'Forbidden');
+        }
+        if ($aspiration->status !== AspirationStatusEnum::PENDING) {
+            return redirect()->route('dashboard.student.aspiration.show', $aspiration)->with('error', 'Aspirasi tidak dapat diubah!');
+        }
+        $categories = Category::all();
+        return view('pages.dashboard.student.aspiration.edit', [
+            'meta' => [
+                'sidebarItems' => studentSidebarItems(),
+            ],
+            'categories' => $categories,
+            'aspiration' => $aspiration,
+        ]);
     }
 
     /**
@@ -101,7 +114,20 @@ class AspirationController extends Controller
      */
     public function update(Request $request, Aspiration $aspiration)
     {
-        //
+        if ($request->user()->student->id !== $aspiration->student_id) {
+            abort(403, 'Forbidden');
+        }
+        if ($aspiration->status !== AspirationStatusEnum::PENDING) {
+            return redirect()->route('dashboard.student.aspiration.show', $aspiration)->with('error', 'Aspirasi tidak dapat diubah!');
+        }
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'location' => ['required', 'string', 'max:255'],
+            'category_id' => ['required', 'exists:categories,id'],
+        ]);
+        $aspiration->update($validated);
+        return redirect()->route('dashboard.student.aspiration.index')->with('success', 'Berhasil mengubah aspirasi!');
     }
 
     /**
