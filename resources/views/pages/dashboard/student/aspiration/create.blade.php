@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('title', 'Tambah Data Aspirasi - PeSarana')
+@section('title', 'Tambah Aspirasi - ' . config('app.name'))
 @section('content')
     <x-alerts :errors="$errors" />
     <div class="row mb-4">
