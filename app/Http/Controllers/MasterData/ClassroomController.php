@@ -21,7 +21,7 @@ class ClassroomController extends Controller
         if ($limit > 100) {
             $limit = 100;
         }
-        $classrooms = Classroom::paginate($limit)->appends($request->except('page'));
+        $classrooms = Classroom::withCount('students')->paginate($limit)->appends($request->except('page'));
         return view('pages.dashboard.admin.master-data.classroom.index', [
             'meta' => [
                 'sidebarItems' => adminSidebarItems(),
