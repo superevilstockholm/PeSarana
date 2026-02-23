@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
 // Master Data Controllers
+use App\Http\Controllers\MasterData\CategoryController;
 use App\Http\Controllers\MasterData\ClassroomController;
 use App\Http\Controllers\MasterData\AspirationController;
 use App\Http\Controllers\MasterData\AspirationFeedbackController;
@@ -39,6 +40,9 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('master-data')->name('master-data.')->group(function () {
                 Route::resource('classrooms', ClassroomController::class)->parameters([
                     'classrooms' => 'classroom',
+                ])->except(['show']);
+                Route::resource('categories', CategoryController::class)->parameters([
+                    'categories' => 'category',
                 ])->except(['show']);
                 Route::resource('aspirations', AspirationController::class)->parameters([
                     'aspirations' => 'aspiration'
