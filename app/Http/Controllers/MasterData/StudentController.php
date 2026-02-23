@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 
 // Models
 use App\Models\MasterData\Student;
+use Illuminate\Http\RedirectResponse;
 
 class StudentController extends Controller
 {
@@ -77,8 +78,12 @@ class StudentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Student $student)
+    public function destroy(Student $student): RedirectResponse
     {
-        //
+        if ($student->user) {
+            $student->user->delete();
+        }
+        $student->delete();
+        return redirect()->route('dashboard.admin.master-data.students.index')->with('success', 'Berhasil menghapus siswa.');
     }
 }
