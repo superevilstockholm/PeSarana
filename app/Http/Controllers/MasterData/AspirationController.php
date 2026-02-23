@@ -88,7 +88,7 @@ class AspirationController extends Controller
     public function show(Aspiration $aspiration, Request $request): View
     {
         $user_role = $request->user()->role;
-        return view($user_role === 'admin'
+        return view($user_role === RoleEnum::ADMIN
             ? 'pages.dashboard.admin.master-data.aspiration.show'
             : 'pages.dashboard.student.aspiration.show', [
             'meta' => [
