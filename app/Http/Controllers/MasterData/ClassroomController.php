@@ -57,17 +57,26 @@ class ClassroomController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Classroom $classroom)
+    public function edit(Classroom $classroom): View
     {
-        //
+        return view('pages.dashboard.admin.master-data.classroom.edit', [
+            'meta' => [
+                'sidebarItems' => adminSidebarItems(),
+            ],
+            'classroom' => $classroom,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Classroom $classroom)
+    public function update(Request $request, Classroom $classroom): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'unique:classrooms,name,' . $classroom->id],
+        ]);
+        $classroom->update($validated);
+        return redirect()->route('dashboard.admin.master-data.classrooms.index')->with('success', 'berhasil mengubah kelas.');
     }
 
     /**

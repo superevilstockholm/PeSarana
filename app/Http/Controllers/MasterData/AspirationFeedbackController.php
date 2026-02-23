@@ -53,7 +53,7 @@ class AspirationFeedbackController extends Controller
             'content' => 'required|string',
         ]);
         $aspirationFeedback->update(['content' => $validated['content']]);
-        return redirect()->route('dashboard.admin.master-data.aspirations.show', $aspirationFeedback->aspiration->id)->with('success', 'Berhasil memperbarui data feedback aspirasi.');
+        return redirect()->route('dashboard.admin.master-data.aspirations.show', $aspirationFeedback->aspiration->id)->with('success', 'Berhasil memperbarui feedback.');
     }
 
     /**
