@@ -32,6 +32,9 @@ class AuthController extends Controller
         if (!$student) {
             return back()->withErrors('NISN atau Tanggal Lahir salah')->withInput($request->except('password'));
         }
+        if ($student->user) {
+            return back()->withErrors('Siswa sudah memiliki akun.')->withInput($request->except(['nisn', 'dob', 'password']));
+        }
         unset($validated['nisn'], $validated['dob']);
         $validated['name'] = $student->name;
         $validated['password'] = Hash::make($validated['password']);
