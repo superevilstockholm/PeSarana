@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
 // Master Data Controllers
+use App\Http\Controllers\MasterData\UserController;
 use App\Http\Controllers\MasterData\StudentController;
 use App\Http\Controllers\MasterData\CategoryController;
 use App\Http\Controllers\MasterData\ClassroomController;
@@ -47,6 +48,9 @@ Route::middleware(['auth'])->group(function () {
                 ])->except(['show']);
                 Route::resource('students', StudentController::class)->parameters([
                     'students' => 'student',
+                ]);
+                Route::resource('users', UserController::class)->parameters([
+                    'users' => 'user',
                 ]);
                 Route::resource('aspirations', AspirationController::class)->parameters([
                     'aspirations' => 'aspiration'
