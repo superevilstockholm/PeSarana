@@ -23,17 +23,17 @@ class AspirationController extends Controller
      */
     public function index(Request $request): View
     {
-        $user_role = $request->user()->role->value;
+        $user_role = $request->user()->role;
         $limit = (int) $request->query('limit', 10);
         if ($limit > 100) {
             $limit = 100;
         }
         $aspirations = Aspiration::with(['student', 'category'])->paginate($limit)->appends($request->except('page'));
-        return view($user_role === 'admin'
+        return view($user_role === RoleEnum::ADMIN
             ? 'pages.dashboard.admin.master-data.aspiration.index'
             : 'pages.dashboard.student.aspiration.index', [
             'meta' => [
-                'sidebarItems' => $user_role === 'admin'
+                'sidebarItems' => $user_role === RoleEnum::ADMIN
                     ? adminSidebarItems()
                     : studentSidebarItems(),
             ],
@@ -87,12 +87,12 @@ class AspirationController extends Controller
      */
     public function show(Aspiration $aspiration, Request $request): View
     {
-        $user_role = $request->user()->role->value;
+        $user_role = $request->user()->role;
         return view($user_role === 'admin'
             ? 'pages.dashboard.admin.master-data.aspiration.show'
             : 'pages.dashboard.student.aspiration.show', [
             'meta' => [
-                'sidebarItems' => $user_role === 'admin'
+                'sidebarItems' => $user_role === RoleEnum::ADMIN
                     ? adminSidebarItems()
                     : studentSidebarItems(),
             ],
@@ -168,7 +168,8 @@ class AspirationController extends Controller
      */
     public function destroy(Aspiration $aspiration, Request $request): RedirectResponse
     {
-        if ($request->user()->role === RoleEnum::STUDENT && $request->user()->student->id !== $aspiration->student_id) {
+        $user_role = $request->user()->role;
+        if ($user_role === RoleEnum::STUDENT && $request->user()->student->id !== $aspiration->student_id) {
             abort(403, 'Forbidden');
         }
         if ($aspiration->aspiration_images()->count() > 0) {
@@ -177,6 +178,8 @@ class AspirationController extends Controller
             }
         }
         $aspiration->delete();
-        return redirect()->route('dashboard.student.aspirations.index')->with('success', 'Berhasil menghapus aspirasi!');
+        return redirect()->route($user_role === RoleEnum::ADMIN
+            ? 'dashboard.admin.master-data.aspirations.index'
+            : 'dashboard.student.aspirations.index')->with('success', 'Berhasil menghapus aspirasi!');
     }
 }
