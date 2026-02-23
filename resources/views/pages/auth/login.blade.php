@@ -16,11 +16,11 @@
                             @csrf
                             <div class="mb-2">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control form-control-sm @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" autocomplete="email" autofocus>
+                                <input type="email" class="form-control form-control-sm" id="email" name="email" value="{{ old('email') }}" autocomplete="current-email" autofocus>
                             </div>
                             <div class="mb-2">
                                 <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control form-control-sm @error('password') is-invalid @enderror" id="password" name="password" value="{{ old('password') }}" autocomplete="email" autofocus>
+                                <input type="password" class="form-control form-control-sm" id="password" name="password" value="{{ old('password') }}" autocomplete="current-password">
                             </div>
                             <x-alerts :errors="$errors"></x-alerts>
                             <p class="text-end p-0 m-0 mb-2">Lupa password? <a class="text-primary" href="#">Reset disini!</a></p>
