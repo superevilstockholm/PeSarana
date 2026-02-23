@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 
 // Models
 use App\Models\MasterData\Category;
+use Illuminate\Http\RedirectResponse;
 
 class CategoryController extends Controller
 {
@@ -32,17 +33,25 @@ class CategoryController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
-        //
+        return view('pages.dashboard.admin.master-data.category.create', [
+            'meta' => [
+                'sidebarItems' => adminSidebarItems(),
+            ],
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'unique:categories,name'],
+        ]);
+        Category::create($validated);
+        return redirect()->route('dashboard.admin.master-data.categories.index')->with('success', 'Berhasil membuat kategori.');
     }
 
     /**
