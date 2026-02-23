@@ -84,6 +84,7 @@ class ClassroomController extends Controller
      */
     public function destroy(Classroom $classroom)
     {
-        //
+        $classroom->delete();
+        return redirect()->route('dashboard.admin.master-data.classrooms.index')->with('success', 'Berhasil menghapus kelas.');
     }
 }
