@@ -79,7 +79,7 @@ class AspirationController extends Controller
                 ]);
             }
         }
-        return redirect()->route('dashboard.student.aspirations.index')->with('success', 'Berhasil membuat aspirasi!');
+        return redirect()->route('dashboard.student.aspirations.index')->with('success', 'Berhasil membuat aspirasi.');
     }
 
     /**
@@ -109,7 +109,7 @@ class AspirationController extends Controller
             abort(403, 'Forbidden');
         }
         if ($aspiration->status !== AspirationStatusEnum::PENDING) {
-            return redirect()->route('dashboard.student.aspirations.show', $aspiration)->with('error', 'Aspirasi tidak dapat diubah!');
+            return redirect()->route('dashboard.student.aspirations.show', $aspiration)->with('error', 'Aspirasi tidak dapat diubah.');
         }
         $categories = Category::all();
         return view('pages.dashboard.student.aspiration.edit', [
@@ -130,7 +130,7 @@ class AspirationController extends Controller
             abort(403, 'Forbidden');
         }
         if ($aspiration->status !== AspirationStatusEnum::PENDING) {
-            return redirect()->route('dashboard.student.aspirations.show', $aspiration)->with('error', 'Aspirasi tidak dapat diubah!');
+            return redirect()->route('dashboard.student.aspirations.show', $aspiration)->with('error', 'Aspirasi tidak dapat diubah.');
         }
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -160,7 +160,7 @@ class AspirationController extends Controller
                 ]);
             }
         }
-        return redirect()->route('dashboard.student.aspirations.index')->with('success', 'Berhasil mengubah aspirasi!');
+        return redirect()->route('dashboard.student.aspirations.index')->with('success', 'Berhasil mengubah aspirasi.');
     }
 
     /**
@@ -180,6 +180,6 @@ class AspirationController extends Controller
         $aspiration->delete();
         return redirect()->route($user_role === RoleEnum::ADMIN
             ? 'dashboard.admin.master-data.aspirations.index'
-            : 'dashboard.student.aspirations.index')->with('success', 'Berhasil menghapus aspirasi!');
+            : 'dashboard.student.aspirations.index')->with('success', 'Berhasil menghapus aspirasi.');
     }
 }
