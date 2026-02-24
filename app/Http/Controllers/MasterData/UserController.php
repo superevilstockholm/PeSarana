@@ -57,7 +57,7 @@ class UserController extends Controller
             'password' => ['required', 'string', 'max:255'],
             'role' => ['required', 'string', 'in:admin,student'],
             'name' => ['nullable', 'required_if:role,admin', 'string', 'max:255'],
-            'student_id' => ['nullable', 'required_if:role,student', 'exists:students_id'],
+            'student_id' => ['nullable', 'required_if:role,student', 'exists:students,id'],
         ]);
         if ($validated['role'] === 'student') {
             $student = Student::where('id', $validated['student_id'])->first();
@@ -89,17 +89,53 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function edit(User $user): View
     {
-        //
+        $students = $user->role === RoleEnum::STUDENT
+            ? Student::whereNull('user_id')->orWhere('id', $user->student->id)->get()
+            : Student::whereNull('user_id')->get();
+        return view('pages.dashboard.admin.master-data.user.edit', [
+            'meta' => [
+                'sidebarItems' => adminSidebarItems(),
+            ],
+            'students' => $students,
+            'user' => $user,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $user): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'password' => ['nullable', 'string', 'max:255'],
+            'role' => ['required', 'string', 'in:admin,student'],
+            'name' => ['nullable', 'required_if:role,admin', 'string', 'max:255'],
+            'student_id' => ['nullable', 'required_if:role,student', 'exists:students,id'],
+        ]);
+        if ($user->role === RoleEnum::STUDENT) {
+            $user->student->update([
+                'user_id' => null,
+            ]);
+        }
+        if ($validated['role'] === 'student') {
+            $student = Student::where('id', $validated['student_id'])->first();
+            $validated['name'] = $student->name;
+        }
+        if ($validated['password']) {
+            $validated['password'] = Hash::make($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
+        $user->update($validated);
+        if ($validated['role'] === 'student') {
+            $student->update([
+                'user_id' => $user->id,
+            ]);
+        }
+        return redirect()->route('dashboard.admin.master-data.users.index')->with('success', 'Berhasil mengubah pengguna.');
     }
 
     /**
