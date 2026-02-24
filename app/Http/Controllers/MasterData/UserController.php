@@ -58,12 +58,17 @@ class UserController extends Controller
             'role' => ['required', 'string', 'in:admin,student'],
             'name' => ['nullable', 'required_if:role,admin', 'string', 'max:255'],
             'student_id' => ['nullable', 'required_if:role,student', 'exists:students,id'],
+            'profile_picture_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,svg,webp', 'max:2048'],
         ]);
         if ($validated['role'] === 'student') {
             $student = Student::where('id', $validated['student_id'])->first();
             $validated['name'] = $student->name;
         }
         $validated['password'] = Hash::make($validated['password']);
+        if ($request->hasFile('profile_picture_image')) {
+            $validated['profile_picture_path'] = $request->file('profile_picture_image')->store('profile-picture', 'public');
+        }
+        unset($validated['profile_picture_image']);
         $user = User::create($validated);
         if ($validated['role'] === 'student') {
             $student->update([
