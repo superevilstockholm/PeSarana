@@ -66,7 +66,7 @@ class User extends Authenticatable
         $public_disk = Storage::disk('public');
         return $this->profile_picture_path
             ? $public_disk->url($this->profile_picture_path)
-            : asset('static/img/no-image-placeholder.svg');
+            : asset('static/img/default-profile-picture.svg');
     }
 
     public function student()

@@ -143,8 +143,9 @@ class UserController extends Controller
         } else {
             unset($validated['password']);
         }
-        if ($user->profile_picture_path && $validated['delete_profile_picture_image']) {
+        if ($request->boolean('delete_profile_picture_image') && $user->profile_picture_path) {
             Storage::disk('public')->delete($user->profile_picture_path);
+            $validated['profile_picture_path'] = null;
         }
         if ($request->hasFile('profile_picture_image')) {
             if ($user->profile_picture_path) {
