@@ -162,6 +162,9 @@ class UserController extends Controller
                 'user_id' => null,
             ]);
         }
+        if ($user->profile_picture_path) {
+            Storage::disk('public')->delete($user->profile_picture_path);
+        }
         $user->delete();
         return redirect()->route('dashboard.admin.master-data.users.index')->with('success', 'Berhasil menghapus pengguna.');
     }
