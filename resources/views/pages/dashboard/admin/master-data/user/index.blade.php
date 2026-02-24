@@ -63,6 +63,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">#</th>
+                                    <th>Foto Profil</th>
                                     <th>Nama</th>
                                     <th>Email</th>
                                     <th>Role</th>
@@ -79,6 +80,9 @@
                                             @else
                                                 {{ $loop->iteration }}
                                             @endif
+                                        </td>
+                                        <td>
+                                            <img class="object-fit-cover rounded" style="width: 100px; height: 100px; object-position: center;" src="{{ $user->profile_picture_path_url }}" alt="{{ $user->name ? ucwords(strtolower($user->name)) : '-' }}">
                                         </td>
                                         <td>{{ $user->name ?? '-' }}</td>
                                         <td>{{ $user->email ?? '-' }}</td>
