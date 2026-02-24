@@ -4,10 +4,13 @@ namespace App\Http\Controllers\MasterData;
 
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 
 // Models
 use App\Models\User;
+use App\Models\MasterData\Student;
 
 class UserController extends Controller
 {
@@ -32,17 +35,41 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
-        //
+        $students = Student::whereNull('user_id')->get();
+        return view('pages.dashboard.admin.master-data.user.create', [
+            'meta' => [
+                'sidebarItems' => adminSidebarItems(),
+            ],
+            'students' => $students,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'max:255'],
+            'role' => ['required', 'string', 'in:admin,student'],
+            'name' => ['nullable', 'required_if:role,admin', 'string', 'max:255'],
+            'student_id' => ['nullable', 'required_if:role,student', 'exists:students_id'],
+        ]);
+        if ($validated['role'] === 'student') {
+            $student = Student::where('id', $validated['student_id'])->first();
+            $validated['name'] = $student->name;
+        }
+        $validated['password'] = Hash::make($validated['password']);
+        $user = User::create($validated);
+        if ($validated['role'] === 'student') {
+            $student->update([
+                'user_id' => $user->id,
+            ]);
+        }
+        return redirect()->route('dashboard.admin.master-data.users.index')->with('success', 'Berhasil membuat pengguna.');
     }
 
     /**
