@@ -56,6 +56,7 @@
                             <input type="password" name="password"
                                 class="form-control @error('password') is-invalid @enderror"
                                 id="floatingInputPassword"
+                                autocomplete="new-password"
                                 placeholder="Password baru (opsional)">
                             <label for="floatingInputPassword">Password (kosongkan jika tidak diubah)</label>
                             @error('password')
