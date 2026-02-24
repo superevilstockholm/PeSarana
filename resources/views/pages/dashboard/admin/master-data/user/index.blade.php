@@ -30,7 +30,8 @@
             <div class="card my-0">
                 <div class="card-body">
                     <form method="GET" action="{{ route('dashboard.admin.master-data.users.index') }}" id="filterForm">
-                        <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-3 gap-2 gap-md-0">
+                        <div
+                            class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-3 gap-2 gap-md-0">
                             <div class="d-flex align-items-center">
                                 @php
                                     $limits = [5, 10, 25, 50, 100];
@@ -82,7 +83,10 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <img class="object-fit-cover rounded" style="width: 100px; height: 100px; object-position: center;" src="{{ $user->profile_picture_path_url }}" alt="{{ $user->name ? ucwords(strtolower($user->name)) : '-' }}">
+                                            <img class="object-fit-cover rounded"
+                                                style="width: 100px; height: 100px; object-position: center;"
+                                                src="{{ $user->profile_picture_path_url }}"
+                                                alt="{{ $user->name ? ucwords(strtolower($user->name)) : '-' }}">
                                         </td>
                                         <td>{{ $user->name ?? '-' }}</td>
                                         <td>{{ $user->email ?? '-' }}</td>
@@ -148,7 +152,8 @@
                     const userName = this.getAttribute('data-name');
                     Swal.fire({
                         title: "Hapus Pengguna?",
-                        text: "Apakah Anda yakin ingin menghapus Pengguna \"" + userName + "\"? Aksi ini tidak dapat dibatalkan.",
+                        text: "Apakah Anda yakin ingin menghapus Pengguna \"" + userName +
+                            "\"? Aksi ini tidak dapat dibatalkan.",
                         icon: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#d33",

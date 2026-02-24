@@ -1,11 +1,12 @@
 @extends('layouts.dashboard')
-@section('title', 'Tambah Data Kelas - '. config('app.name'))
+@section('title', 'Tambah Data Kelas - ' . config('app.name'))
 @section('content')
     <x-alerts :errors="$errors" />
     <div class="row mb-4">
         <div class="col">
             <div class="card my-0">
-                <div class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-2 gap-lg-5">
+                <div
+                    class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-2 gap-lg-5">
                     <div class="d-flex flex-column">
                         <h3 class="p-0 m-0 mb-1 fw-semibold">Tambah Kelas</h3>
                         <p class="p-0 m-0 fw-medium text-muted">Formulir untuk memasukkan data Kelas baru.</p>
@@ -24,10 +25,12 @@
         <div class="col">
             <div class="card my-0">
                 <div class="card-body">
-                    <form action="{{ route('dashboard.admin.master-data.classrooms.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('dashboard.admin.master-data.classrooms.store') }}" method="POST"
+                        enctype="multipart/form-data">
                         @csrf
                         <div class="form-floating mb-3">
-                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" id="floatingInputName" placeholder="Nama Kelas" value="{{ old('name') }}" required>
+                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
+                                id="floatingInputName" placeholder="Nama Kelas" value="{{ old('name') }}" required>
                             <label for="floatingInputName">Nama Kelas</label>
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>

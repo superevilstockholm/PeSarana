@@ -52,7 +52,8 @@
                 <li class="dropdown pc-h-item header-user-profile">
                     <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown"
                         href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                        <img id="userProfilePicture" src="{{ auth()->user()?->profile_picture_path_url ?? asset('static/img/default-profile-picture.svg') }}"
+                        <img id="userProfilePicture"
+                            src="{{ auth()->user()?->profile_picture_path_url ?? asset('static/img/default-profile-picture.svg') }}"
                             alt="user-image" class="user-avtar object-fit-cover" style="width: 34px; height: 34px;" />
                         <span>
                             <i class="ti ti-settings"></i>
@@ -86,7 +87,8 @@
                             <hr />
                             <div class="profile-notification-scroll position-relative"
                                 style="max-height: calc(100vh - 280px)">
-                                <a href="javascript:void(0);" id="account-profile-button" class="dropdown-item text-body">
+                                <a href="javascript:void(0);" id="account-profile-button"
+                                    class="dropdown-item text-body">
                                     <i class="ti ti-user"></i>
                                     <span>Account Profile</span>
                                 </a>
@@ -110,10 +112,10 @@
     </div>
 </header>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const theme = localStorage.getItem('theme') || 'light';
         applyThemeIcon(theme);
-        document.getElementById('theme-button').addEventListener('click', function () {
+        document.getElementById('theme-button').addEventListener('click', function() {
             const current = document.documentElement.getAttribute('data-bs-theme');
             const next = current === 'light' ? 'dark' : 'light';
             applyTheme(next);

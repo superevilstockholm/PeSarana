@@ -13,7 +13,8 @@
                     class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-2 gap-lg-5">
                     <div class="d-flex flex-column">
                         <h3 class="p-0 m-0 mb-1 fw-semibold">Detail Aspirasi</h3>
-                        <p class="p-0 m-0 fw-medium text-muted">Informasi lengkap aspirasi: {{ $aspiration->title ?? 'N/A' }}</p>
+                        <p class="p-0 m-0 fw-medium text-muted">Informasi lengkap aspirasi: {{ $aspiration->title ?? 'N/A' }}
+                        </p>
                     </div>
                     <div class="d-flex align-items-center">
                         <a href="{{ route('dashboard.student.aspirations.index') }}"
@@ -33,11 +34,9 @@
                     <div class="row mb-4">
                         <div class="col d-flex align-items-center gap-2">
                             @foreach ($aspiration->aspiration_images as $image)
-                            <img class="object-fit-cover rounded me-2 mb-2 img-preview"
-                                style="height: 150px; width: 150px; cursor: zoom-in;"
-                                src="{{ $image->image_path_url }}"
-                                alt="{{ $aspiration->title ?? '-' }}"
-                                data-full="{{ $image->image_path_url }}">
+                                <img class="object-fit-cover rounded me-2 mb-2 img-preview"
+                                    style="height: 150px; width: 150px; cursor: zoom-in;" src="{{ $image->image_path_url }}"
+                                    alt="{{ $aspiration->title ?? '-' }}" data-full="{{ $image->image_path_url }}">
                             @endforeach
                         </div>
                     </div>
@@ -51,15 +50,19 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4 text-muted">Status</div>
-                        <div class="col-md-8 fw-medium">{{ $aspiration->status?->value ? ucwords(strtolower($aspiration->status->value)) : '-' }}</div>
+                        <div class="col-md-8 fw-medium">
+                            {{ $aspiration->status?->value ? ucwords(strtolower($aspiration->status->value)) : '-' }}</div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4 text-muted">Kategori</div>
-                        <div class="col-md-8 fw-medium">{{ $aspiration->category?->name ? ucwords(strtolower($aspiration->category->name)) : '-' }}</div>
+                        <div class="col-md-8 fw-medium">
+                            {{ $aspiration->category?->name ? ucwords(strtolower($aspiration->category->name)) : '-' }}
+                        </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4 text-muted">Dibuat Oleh</div>
-                        <div class="col-md-8 fw-medium">{{ $aspiration->student?->name ? ucwords(strtolower($aspiration->student->name)) : '-' }}</div>
+                        <div class="col-md-8 fw-medium">
+                            {{ $aspiration->student?->name ? ucwords(strtolower($aspiration->student->name)) : '-' }}</div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-12 text-muted mb-3">Konten</div>
@@ -103,7 +106,7 @@
                                 <div class="col-md-12 text-muted mb-3">Konten</div>
                                 <div class="col-md-12 fw-normal fs-6 markdown-content">{!! $feedback->content ? Str::markdown($feedback->content) : '-' !!}</div>
                             </div>
-                            <hr {{ $loop->last ? 'class=mb-0' : ""}}>
+                            <hr {{ $loop->last ? 'class=mb-0' : '' }}>
                         @endforeach
                     @endif
                 </div>
@@ -114,21 +117,25 @@
                 <div class="card-body">
                     <h4 class="card-title fw-semibold mb-3">Aksi Cepat</h4>
                     @if (!in_array($aspiration->status, [AspirationStatusEnum::COMPLETED, AspirationStatusEnum::REJECTED]))
-                        <a href="{{ route('dashboard.student.aspirations.edit', $aspiration->id) }}" class="btn btn-warning w-100 mb-2">
+                        <a href="{{ route('dashboard.student.aspirations.edit', $aspiration->id) }}"
+                            class="btn btn-warning w-100 mb-2">
                             <i class="ti ti-pencil me-1"></i> Edit Aspirasi
                         </a>
                     @endif
-                    <form id="form-delete-{{ $aspiration->id }}" action="{{ route('dashboard.student.aspirations.destroy', $aspiration->id) }}" method="POST">
+                    <form id="form-delete-{{ $aspiration->id }}"
+                        action="{{ route('dashboard.student.aspirations.destroy', $aspiration->id) }}" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="button" class="btn btn-danger w-100 btn-delete" data-id="{{ $aspiration->id }}" data-name="{{ $aspiration->title }}">
+                        <button type="button" class="btn btn-danger w-100 btn-delete" data-id="{{ $aspiration->id }}"
+                            data-name="{{ $aspiration->title }}">
                             <i class="ti ti-trash me-1"></i> Hapus Aspirasi
                         </button>
                     </form>
                     <hr class="my-4">
                     <h4 class="card-title fw-semibold mb-3">Catatan</h4>
                     <p class="text-muted small">
-                        Halaman ini hanya menampilkan detail data yang tersimpan. Untuk mengubah, klik tombol "Edit Aspirasi".
+                        Halaman ini hanya menampilkan detail data yang tersimpan. Untuk mengubah, klik tombol "Edit
+                        Aspirasi".
                     </p>
                 </div>
             </div>
@@ -145,14 +152,15 @@
         </div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.btn-delete').forEach(function (btn) {
-                btn.addEventListener('click', function () {
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.btn-delete').forEach(function(btn) {
+                btn.addEventListener('click', function() {
                     const aspirationId = this.getAttribute('data-id');
                     const aspirationTitle = this.getAttribute('data-name');
                     Swal.fire({
                         title: "Hapus Aspirasi?",
-                        text: "Apakah Anda yakin ingin menghapus \"" + aspirationTitle + "\"? Aksi ini tidak dapat dibatalkan.",
+                        text: "Apakah Anda yakin ingin menghapus \"" + aspirationTitle +
+                            "\"? Aksi ini tidak dapat dibatalkan.",
                         icon: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#d33",
@@ -167,9 +175,9 @@
                 });
             });
         });
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.img-preview').forEach(img => {
-                img.addEventListener('click', function () {
+                img.addEventListener('click', function() {
                     const fullImageUrl = this.getAttribute('data-full');
                     document.getElementById('previewImage').src = fullImageUrl;
                     const modal = new bootstrap.Modal(document.getElementById('imagePreviewModal'));
@@ -179,7 +187,8 @@
         });
     </script>
     <style>
-        .markdown-content p, .markdown-content ul {
+        .markdown-content p,
+        .markdown-content ul {
             margin-bottom: 0 !important;
         }
     </style>

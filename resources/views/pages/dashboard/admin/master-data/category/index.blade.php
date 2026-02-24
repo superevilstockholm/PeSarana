@@ -29,8 +29,10 @@
         <div class="col">
             <div class="card my-0">
                 <div class="card-body">
-                    <form method="GET" action="{{ route('dashboard.admin.master-data.categories.index') }}" id="filterForm">
-                        <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-3 gap-2 gap-md-0">
+                    <form method="GET" action="{{ route('dashboard.admin.master-data.categories.index') }}"
+                        id="filterForm">
+                        <div
+                            class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-3 gap-2 gap-md-0">
                             <div class="d-flex align-items-center">
                                 @php
                                     $limits = [5, 10, 25, 50, 100];
@@ -99,7 +101,8 @@
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="button" class="dropdown-item text-danger btn-delete"
-                                                            data-id="{{ $classroom->id }}" data-name="{{ $classroom->name }}">
+                                                            data-id="{{ $classroom->id }}"
+                                                            data-name="{{ $classroom->name }}">
                                                             <i class="ti ti-trash me-1 text-danger"></i> Hapus
                                                         </button>
                                                     </form>
@@ -138,7 +141,8 @@
                     const classroomName = this.getAttribute('data-name');
                     Swal.fire({
                         title: "Hapus Kategori?",
-                        text: "Apakah Anda yakin ingin menghapus Kategori \"" + classroomName + "\"? Aksi ini tidak dapat dibatalkan.",
+                        text: "Apakah Anda yakin ingin menghapus Kategori \"" +
+                            classroomName + "\"? Aksi ini tidak dapat dibatalkan.",
                         icon: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#d33",
