@@ -63,6 +63,9 @@ class UserController extends Controller
         ]);
         if ($validated['role'] === 'student') {
             $student = Student::where('id', $validated['student_id'])->first();
+            if ($student->user) {
+                return back()->withErrors('Siswa sudah memiliki akun.')->withInput($request->except('password'));
+            }
             $validated['name'] = $student->name;
         }
         $validated['password'] = Hash::make($validated['password']);
@@ -120,6 +123,7 @@ class UserController extends Controller
             'role' => ['required', 'string', 'in:admin,student'],
             'name' => ['nullable', 'required_if:role,admin', 'string', 'max:255'],
             'student_id' => ['nullable', 'required_if:role,student', 'exists:students,id'],
+            'delete_profile_picture_image' => ['nullable', 'boolean'],
             'profile_picture_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,svg,webp', 'max:2048'],
         ]);
         if ($user->role === RoleEnum::STUDENT) {
@@ -129,12 +133,18 @@ class UserController extends Controller
         }
         if ($validated['role'] === 'student') {
             $student = Student::where('id', $validated['student_id'])->first();
+            if ($student->user) {
+                return back()->withErrors('Siswa sudah memiliki akun.')->withInput($request->except('password'));
+            }
             $validated['name'] = $student->name;
         }
-        if ($validated['password']) {
+        if (!empty($validated['password'])) {
             $validated['password'] = Hash::make($validated['password']);
         } else {
             unset($validated['password']);
+        }
+        if ($user->profile_picture_path && $validated['delete_profile_picture_image']) {
+            Storage::disk('public')->delete($user->profile_picture_path);
         }
         if ($request->hasFile('profile_picture_image')) {
             if ($user->profile_picture_path) {
