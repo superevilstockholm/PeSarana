@@ -33,12 +33,14 @@ class DashboardController extends Controller
                 'sidebarItems' => adminSidebarItems(),
             ],
             'stats' => $stats,
+            'user' => $request->user(),
         ]);
     }
 
     public function student_dashboard(Request $request): View
     {
-        $student = $request->user()->student;
+        $user = $request->user();
+        $student = $user->student;
         $stats = [
             'student_aspirations_count' => Aspiration::where('student_id', $student->id)->count(),
             'student_pending_aspirations_count' => Aspiration::where('student_id', $student->id)->where('status', AspirationStatusEnum::PENDING)->count(),
@@ -46,12 +48,12 @@ class DashboardController extends Controller
             'student_completed_aspirations_count' => Aspiration::where('student_id', $student->id)->where('status', AspirationStatusEnum::COMPLETED)->count(),
             'student_rejected_aspirations_count' => Aspiration::where('student_id', $student->id)->where('status', AspirationStatusEnum::REJECTED)->count(),
         ];
-
         return view('pages.dashboard.student.index', [
             'meta' => [
                 'sidebarItems' => studentSidebarItems(),
             ],
             'stats' => $stats,
+            'user' => $user,
         ]);
     }
 }
