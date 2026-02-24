@@ -12,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 // Models
 use App\Models\User;
 use App\Models\MasterData\Student;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -66,7 +67,7 @@ class UserController extends Controller
         }
         $validated['password'] = Hash::make($validated['password']);
         if ($request->hasFile('profile_picture_image')) {
-            $validated['profile_picture_path'] = $request->file('profile_picture_image')->store('profile-picture', 'public');
+            $validated['profile_picture_path'] = $request->file('profile_picture_image')->store('profile-pictures', 'public');
         }
         unset($validated['profile_picture_image']);
         $user = User::create($validated);
@@ -119,6 +120,7 @@ class UserController extends Controller
             'role' => ['required', 'string', 'in:admin,student'],
             'name' => ['nullable', 'required_if:role,admin', 'string', 'max:255'],
             'student_id' => ['nullable', 'required_if:role,student', 'exists:students,id'],
+            'profile_picture_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,svg,webp', 'max:2048'],
         ]);
         if ($user->role === RoleEnum::STUDENT) {
             $user->student->update([
@@ -134,6 +136,13 @@ class UserController extends Controller
         } else {
             unset($validated['password']);
         }
+        if ($request->hasFile('profile_picture_image')) {
+            if ($user->profile_picture_path) {
+                Storage::disk('public')->delete($user->profile_picture_path);
+            }
+            $validated['profile_picture_path'] = $request->file('profile_picture_image')->store('profile-pictures', 'public');
+        }
+        unset($validated['profile_picture_image']);
         $user->update($validated);
         if ($validated['role'] === 'student') {
             $student->update([
