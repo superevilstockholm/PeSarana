@@ -46,7 +46,6 @@ class DashboardController extends Controller
             'student_completed_aspirations_count' => Aspiration::where('student_id', $student->id)->where('status', AspirationStatusEnum::COMPLETED)->count(),
             'student_rejected_aspirations_count' => Aspiration::where('student_id', $student->id)->where('status', AspirationStatusEnum::REJECTED)->count(),
         ];
-
         return view('pages.dashboard.student.index', [
             'meta' => [
                 'sidebarItems' => studentSidebarItems(),
