@@ -30,6 +30,11 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title fw-semibold mb-3">Data Pengguna</h4>
+                    <div class="row mb-4">
+                        <div class="col">
+                            <img class="object-fit-cover rounded" style="height: 150px; width: 150px;" src="{{ $user->profile_picture_path_url }}" alt="{{ $user->name ?? '-' }}">
+                        </div>
+                    </div>
                     <div class="row mb-3">
                         <div class="col-md-4 text-muted">Nama Pengguna</div>
                         <div class="col-md-8 fw-medium">{{ $user->name ? ucwords(strtolower($user->name)) : '-' }}</div>
