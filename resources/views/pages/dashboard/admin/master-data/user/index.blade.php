@@ -33,7 +33,7 @@
                         <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-3 gap-2 gap-md-0">
                             <div class="d-flex align-items-center">
                                 @php
-                                    $limits = [5, 10, 25, 50, 'all'];
+                                    $limits = [5, 10, 25, 50, 100];
                                     $currentLimit = request('limit', 10);
                                 @endphp
                                 <label for="limitSelect" class="form-label mb-0 me-2">Limit</label>
@@ -42,7 +42,7 @@
                                     @foreach ($limits as $limit)
                                         <option value="{{ $limit }}"
                                             {{ (string) $currentLimit === (string) $limit ? 'selected' : '' }}>
-                                            {{ $limit === 'all' ? 'All' : $limit }}
+                                            {{ $limit }}
                                         </option>
                                     @endforeach
                                 </select>
