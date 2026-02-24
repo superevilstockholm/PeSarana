@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\MasterData;
 
+use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 // Models
 use App\Models\User;
-use Illuminate\View\View;
 
 class UserController extends Controller
 {
@@ -48,9 +48,14 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(User $user): View
     {
-        //
+        return view('pages.dashboard.admin.master-data.user.show', [
+            'meta' => [
+                'sidebarItems' => adminSidebarItems(),
+            ],
+            'user' => $user->load(['student'])->loadCount(['aspiration_feedbacks']),
+        ]);
     }
 
     /**

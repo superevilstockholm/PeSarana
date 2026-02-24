@@ -59,7 +59,7 @@ class User extends Authenticatable
         return $this->hasOne(Student::class);
     }
 
-    public function feedbacks()
+    public function aspiration_feedbacks()
     {
         return $this->hasMany(AspirationFeedback::class);
     }
