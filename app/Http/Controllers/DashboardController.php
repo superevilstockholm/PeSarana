@@ -38,8 +38,13 @@ class DashboardController extends Controller
 
     public function student_dashboard(Request $request): View
     {
+        $student = $request->user()->student;
         $stats = [
-
+            'student_aspirations_count' => Aspiration::where('student_id', $student->id)->count(),
+            'student_pending_aspirations_count' => Aspiration::where('student_id', $student->id)->where('status', AspirationStatusEnum::PENDING)->count(),
+            'student_on_going_aspirations_count' => Aspiration::where('student_id', $student->id)->where('status', AspirationStatusEnum::ON_GOING)->count(),
+            'student_completed_aspirations_count' => Aspiration::where('student_id', $student->id)->where('status', AspirationStatusEnum::COMPLETED)->count(),
+            'student_rejected_aspirations_count' => Aspiration::where('student_id', $student->id)->where('status', AspirationStatusEnum::REJECTED)->count(),
         ];
 
         return view('pages.dashboard.student.index', [
