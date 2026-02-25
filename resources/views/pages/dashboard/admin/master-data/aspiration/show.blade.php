@@ -1,7 +1,5 @@
 @extends('layouts.dashboard')
-@section('title', 'Detail Aspirasi - PeSarana')
-@section('meta-description', 'Detail data aspirasi PeSarana')
-@section('meta-keywords', 'master data, detail aspirasi, detail aspiration, aspirasi, aspiration, PeSarana')
+@section('title', 'Detail Aspirasi - ' . config('app.name'))
 @section('content')
     <x-alerts :errors="$errors" />
     @php
