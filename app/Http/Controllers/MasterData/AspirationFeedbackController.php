@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 
 // Models
+use App\Models\Notification;
 use App\Models\MasterData\Aspiration;
 use App\Models\MasterData\AspirationFeedback;
 
@@ -41,6 +42,14 @@ class AspirationFeedbackController extends Controller
         $validated['user_id'] = $user->id;
         AspirationFeedback::create($validated);
         $aspiration->update(['status' => $validated['status']]);
+        $studentUser = $aspiration->student?->user;
+        if ($studentUser) {
+            Notification::create([
+                'title' => 'Feedback untuk Aspirasi: ' . $aspiration->title,
+                'content' => 'Admin telah memberikan tanggapan pada aspirasi "'. $aspiration->title . '". Silakan buka aspirasi untuk melihat tanggapan.',
+                'user_id' => $studentUser->id,
+            ]);
+        }
         return redirect()->route('dashboard.admin.master-data.aspirations.show', $aspiration->id)->with('success', 'Berhasil membuat feedback.');
     }
 
