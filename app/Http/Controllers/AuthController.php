@@ -20,7 +20,12 @@ class AuthController extends Controller
     public function signup(Request $request): View | RedirectResponse
     {
         if ($request->isMethod('get')) {
-            return view('pages.auth.signup');
+            return view('pages.auth.signup', [
+                'meta' => [
+                    'showNavbar' => false,
+                    'showFooter' => false
+                ]
+            ]);
         }
         $validated = $request->validate([
             'nisn' => ['required', 'digits:10'],
@@ -49,7 +54,12 @@ class AuthController extends Controller
     public function login(Request $request): View | RedirectResponse
     {
         if ($request->isMethod('get')) {
-            return view('pages.auth.login');
+            return view('pages.auth.login', [
+                'meta' => [
+                    'showNavbar' => false,
+                    'showFooter' => false
+                ]
+            ]);
         }
         $validated = $request->validate([
             'email' => ['required', 'email', 'max:255'],
