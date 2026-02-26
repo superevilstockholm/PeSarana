@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Enums\RoleEnum;
 
 // Models
+use App\Models\Notification;
 use App\Models\MasterData\Student;
 use App\Models\MasterData\AspirationFeedback;
 
@@ -77,5 +78,10 @@ class User extends Authenticatable
     public function aspiration_feedbacks()
     {
         return $this->hasMany(AspirationFeedback::class);
+    }
+
+    public function notifications()
+    {
+        $this->hasMany(Notification::class);
     }
 }
