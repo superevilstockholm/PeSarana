@@ -18,6 +18,13 @@
         <div class="ms-auto">
             <ul class="list-unstyled">
                 {{-- Notification --}}
+                @php
+                    use App\Models\Notification;
+                    use Illuminate\Support\Facades\Auth;
+                    $user = Auth::user();
+                    $unread_notifications = Notification::where('user_id', $user->id)->where('is_read', false)->count();
+                    $latest_notifications = Notification::where('user_id', $user->id)->orderBy('created_at', 'desc')->take(10)->get();
+                @endphp
                 <li class="dropdown pc-h-item">
                     <a class="pc-head-link head-link-secondary dropdown-toggle arrow-none me-0"
                         data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
@@ -27,24 +34,45 @@
                     <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
                         <div class="dropdown-header">
                             <h5 class="d-flex align-items-center justify-content-between text-body">
-                                Recent Notification
-                                <span id="readAllNotifications"
-                                    class="badge bg-primary rounded-pill d-flex align-items-center gap-1"
-                                    style="cursor: pointer !important;">
+                                Notifikasi Terbaru
+                                <span class="badge bg-primary rounded-pill d-flex align-items-center gap-1" style="cursor: pointer !important;">
                                     <i class="ti ti-bell-check"></i>
-                                    Read All
+                                    Tandai Semua
                                 </span>
                             </h5>
                         </div>
                         <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
                             style="max-height: calc(100vh - 215px)">
-                            <div id="notificationList" class="list-group list-group-flush w-100">
+                            <div class="list-group list-group-flush w-100">
                                 {{-- Notifications --}}
+                                @if ($latest_notifications->count() > 0)
+                                    @foreach ($latest_notifications as $notification)
+                                        <div class="list-group-item list-group-item-action" data-id="{{ $notification->id }}" style="cursor: {{ $notification->is_read ? 'pointer' : 'default'}} !important;">
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0">
+                                                    <div class="user-avtar">
+                                                        <i class="ti ti-bell"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1 ms-1">
+                                                    <span class="float-end text-muted d-b">{{ $notification->created_at }}</span>
+                                                    <h5 style="cursor: {{ $notification->is_read ? 'pointer' : 'default'}} !important;">{{ $notification->title }}</h5>
+                                                    <p class="text-body fs-6 mb-1">{{ $notification->content }}</p>
+                                                    {{ $notification->is_read ? 'Telah Dibaca' : 'Belum Dibaca' }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="list-group-item text-center">
+                                        Tidak ada notifikasi
+                                    </div>
+                                @endif
                             </div>
                         </div>
                         <div class="dropdown-divider"></div>
                         <div class="text-center py-2">
-                            <a href="#" class="link-primary">Show All Notifications</a>
+                            <a href="#" class="link-primary">Lihat semua notifikasi</a>
                         </div>
                     </div>
                 </li>
@@ -52,8 +80,7 @@
                 <li class="dropdown pc-h-item header-user-profile">
                     <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown"
                         href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                        <img id="userProfilePicture"
-                            src="{{ auth()->user()?->profile_picture_path_url ?? asset('static/img/default-profile-picture.svg') }}"
+                        <img src="{{ auth()->user()?->profile_picture_path_url ?? asset('static/img/default-profile-picture.svg') }}"
                             alt="user-image" class="user-avtar object-fit-cover" style="width: 34px; height: 34px;" />
                         <span>
                             <i class="ti ti-settings"></i>
@@ -79,15 +106,13 @@
                                     echo $greeting . ',';
                                     ?>
                                 </span>
-                                <span class="small text-muted text-truncate d-inline-block fs-09"
-                                    style="max-width: 120px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"
-                                    id="userName">{{ auth()->user()->name }}</span>
+                                <span class="small text-muted text-truncate d-inline-block fs-09" style="max-width: 120px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ auth()->user()->name }}</span>
                             </h4>
-                            <p class="text-muted fs-09" id="userRole">{{ auth()->user()->role->value }}</p>
+                            <p class="text-muted fs-09">{{ auth()->user()->role->value }}</p>
                             <hr />
                             <div class="profile-notification-scroll position-relative"
                                 style="max-height: calc(100vh - 280px)">
-                                <a href="javascript:void(0);" id="account-profile-button"
+                                <a href="javascript:void(0);"
                                     class="dropdown-item text-body">
                                     <i class="ti ti-user"></i>
                                     <span>Account Profile</span>
@@ -123,3 +148,13 @@
         });
     });
 </script>
+<style>
+    html[data-bs-theme="dark"] .list-group-item  {
+        --bs-list-group-bg: rgb(29, 29, 29) !important;
+    }
+    html[data-bs-theme="dark"] .list-group-item-action:active,
+    html[data-bs-theme="dark"] .list-group-item-action:hover,
+    html[data-bs-theme="dark"] .list-group-item-action:focus {
+        background: rgb(33, 33, 33) !important;
+    }
+</style>
