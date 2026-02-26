@@ -147,6 +147,23 @@
             applyThemeIcon(next);
         });
     });
+    document.getElementById('logout-button').addEventListener('click', function (e) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Yakin ingin logout?',
+            text: 'Sesi kamu akan diakhiri.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Keluar',
+            cancelButtonText: 'Batal',
+            reverseButtons: true,
+            confirmButtonColor: '#d33',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('logout-form').submit();
+            }
+        });
+    });
 </script>
 <style>
     html[data-bs-theme="dark"] .list-group-item  {
