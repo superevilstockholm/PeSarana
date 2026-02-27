@@ -23,14 +23,10 @@ class NotificationController extends Controller
         if ($limit > 100) {
             $limit = 100;
         }
-        $query = Notification::query();
-        if ($user->role === RoleEnum::STUDENT) {
-            $query->where('user_id', $user->id);
-        }
-        $notifications = $query->paginate($limit)->append($request->excepts('page'));
+        $notifications = Notification::where('user_id', $user->id)->paginate($limit)->appends($request->except('page'));
         return view($user->role === RoleEnum::ADMIN
-            ? adminSidebarItems()
-            : studentSidebarItems(), [
+            ? 'pages.dashboard.admin.notification.index'
+            : 'pages.dashboard.student.notification.index', [
             'meta' => [
                 'sidebarItems' => $user->role === RoleEnum::ADMIN
                     ? adminSidebarItems()
@@ -43,9 +39,27 @@ class NotificationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Notification $notification)
+    public function show(Request $request, Notification $notification): View
     {
-        //
+        $user = $request->user();
+        if ($notification->user_id !== $user->id) {
+            abort(403, 'Forbidden');
+        }
+        if (!$notification->is_read) {
+            $notification->update([
+                'is_read' => true,
+            ]);
+        }
+        return view($user->role === RoleEnum::ADMIN
+            ? 'pages.dashboard.admin.notification.show'
+            : 'pages.dashboard.student.notification.show', [
+            'meta' => [
+                'sidebarItems' => $user->role === RoleEnum::ADMIN
+                    ? adminSidebarItems()
+                    : studentSidebarItems(),
+            ],
+            'notification' => $notification,
+        ]);
     }
 
     /**
@@ -54,7 +68,7 @@ class NotificationController extends Controller
     public function destroy(Request $request, Notification $notification)
     {
         $user = $request->user();
-        if ($user->role === RoleEnum::STUDENT && $notification->user_id !== $user->id) {
+        if ($notification->user_id !== $user->id) {
             abort(403, 'Forbidden');
         }
         $notification->delete();
