@@ -8,6 +8,9 @@ use App\Http\Controllers\AuthController;
 // Dashboard Controller
 use App\Http\Controllers\DashboardController;
 
+// Notification Controller
+use App\Http\Controllers\NotificationController;
+
 // Master Data Controllers
 use App\Http\Controllers\MasterData\UserController;
 use App\Http\Controllers\MasterData\StudentController;
@@ -63,6 +66,9 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('aspirations', AspirationController::class)->parameters([
                 'aspirations' => 'aspiration'
             ]);
+            Route::resource('notifications', NotificationController::class)->parameters([
+                'notifications' => 'notification'
+            ])->only(['index', 'show', 'destroy']);
         });
     });
 });
