@@ -33,11 +33,17 @@
                     <h4 class="card-title fw-semibold mb-3">Data Aspirasi</h4>
                     <div class="row mb-4">
                         <div class="col d-flex flex-wrap align-items-center gap-2">
-                            @foreach ($aspiration->aspiration_images as $image)
+                            @if ($aspiration->aspiration_images->count() > 0)
+                                @foreach ($aspiration->aspiration_images as $image)
+                                    <img class="object-fit-cover rounded me-2 mb-2 img-preview"
+                                        style="height: 150px; width: 150px; cursor: zoom-in;" src="{{ $image->image_path_url }}"
+                                        alt="{{ $aspiration->title ?? '-' }}" data-full="{{ $image->image_path_url }}">
+                                @endforeach
+                            @else
                                 <img class="object-fit-cover rounded me-2 mb-2 img-preview"
-                                    style="height: 150px; width: 150px; cursor: zoom-in;" src="{{ $image->image_path_url }}"
-                                    alt="{{ $aspiration->title ?? '-' }}" data-full="{{ $image->image_path_url }}">
-                            @endforeach
+                                    style="height: 150px; width: 150px; cursor: zoom-in;" src="{{ asset('static/img/no-image-placeholder.svg') }}"
+                                    alt="{{ $aspiration->title ?? '-' }}" data-full="{{ asset('static/img/no-image-placeholder.svg') }}">
+                            @endif
                         </div>
                     </div>
                     <div class="row mb-3">
