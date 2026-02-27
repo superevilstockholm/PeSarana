@@ -38,6 +38,9 @@ Route::middleware(['auth'])->group(function () {
         // Admin
         Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
             Route::get('/', [DashboardController::class, 'admin_dashboard'])->name('index');
+            Route::resource('notifications', NotificationController::class)->parameters([
+                'notifications' => 'notification'
+            ])->only(['index', 'show', 'destroy']);
             // Master Data
             Route::prefix('master-data')->name('master-data.')->group(function () {
                 Route::resource('classrooms', ClassroomController::class)->parameters([

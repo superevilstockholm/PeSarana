@@ -51,8 +51,15 @@ class NotificationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Notification $notification)
+    public function destroy(Request $request, Notification $notification)
     {
-        //
+        $user = $request->user();
+        if ($user->role === RoleEnum::STUDENT && $notification->user_id !== $user->id) {
+            abort(403, 'Forbidden');
+        }
+        $notification->delete();
+        return redirect()->route($user->role === RoleEnum::ADMIN
+            ? 'dashboard.admin.notifications.index'
+            : 'dashboard.student.notifications.index')->with('success', 'Berhasil menghapus notifikasi.');
     }
 }
