@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
+// Home Controller
+use App\Http\Controllers\HomeController;
+
 // Auth Controller
 use App\Http\Controllers\AuthController;
 
@@ -16,9 +19,7 @@ use App\Http\Controllers\MasterData\ClassroomController;
 use App\Http\Controllers\MasterData\AspirationController;
 use App\Http\Controllers\MasterData\AspirationFeedbackController;
 
-Route::get('/', function () {
-    return view('pages.index');
-})->name('index');
+Route::get('/', [HomeController::class, 'index'])->name('index');
 
 Route::middleware(['guest'])->group(function () {
     // Auth
