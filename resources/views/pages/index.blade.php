@@ -1,10 +1,10 @@
 @extends('layouts.base')
 @section('title', config('app.name'))
 @section('content')
-<section class="my-5">
-    <div class="container">
-        <div class="row align-items-center flex-md-row-reverse g-md-5">
-            <div class="col-12 col-md-6 mb-3 mb-md-0">
+<section style="height: 575px">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center flex-md-row-reverse g-0 g-md-5" style="justify-content: center !important;">
+            <div class="col-12 col-md-6">
                 <img class="img-fluid rounded shadow" src="{{ asset('static/img/dashboard-stuent-preview.png') }}" alt="Dashboard Siswa">
             </div>
             <div class="col-12 col-md-6">
@@ -28,7 +28,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col">
-                
+
             </div>
         </div>
     </div>
