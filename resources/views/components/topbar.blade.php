@@ -17,37 +17,6 @@
         </div>
         <div class="ms-auto">
             <ul class="list-unstyled">
-                {{-- Notification --}}
-                <li class="dropdown pc-h-item">
-                    <a class="pc-head-link head-link-secondary dropdown-toggle arrow-none me-0"
-                        data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
-                        aria-expanded="false">
-                        <i class="ti ti-bell"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
-                        <div class="dropdown-header">
-                            <h5 class="d-flex align-items-center justify-content-between text-body">
-                                Recent Notification
-                                <span id="readAllNotifications"
-                                    class="badge bg-primary rounded-pill d-flex align-items-center gap-1"
-                                    style="cursor: pointer !important;">
-                                    <i class="ti ti-bell-check"></i>
-                                    Read All
-                                </span>
-                            </h5>
-                        </div>
-                        <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
-                            style="max-height: calc(100vh - 215px)">
-                            <div id="notificationList" class="list-group list-group-flush w-100">
-                                {{-- Notifications --}}
-                            </div>
-                        </div>
-                        <div class="dropdown-divider"></div>
-                        <div class="text-center py-2">
-                            <a href="#" class="link-primary">Show All Notifications</a>
-                        </div>
-                    </div>
-                </li>
                 {{-- User Profile --}}
                 <li class="dropdown pc-h-item header-user-profile">
                     <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown"
