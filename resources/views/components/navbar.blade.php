@@ -12,13 +12,16 @@
         <div class="w-md-50 collapse navbar-collapse justify-content-center" id="navbarNav">
             <ul class="navbar-nav fs-09 gap-3 fw-medium">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{ route('index') }}">Home</a>
+                    <a class="nav-link" href="#about">Tentang</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
+                    <a class="nav-link" href="#stats">Statistik</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
+                    <a class="nav-link" href="#features">Fitur</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#faq">FAQ</a>
                 </li>
                 <li class="nav-item d-flex align-items-center d-md-none gap-3 fw-medium">
                     <a class="nav-link" href="{{ route('login') }}">Log In</a>
