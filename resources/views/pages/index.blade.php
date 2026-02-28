@@ -1,7 +1,7 @@
 @extends('layouts.base')
 @section('title', config('app.name'))
 @section('content')
-    <section style="height: 620px">
+    <section style="height: 620px" id="about">
         <div class="container h-100">
             <div class="row h-100 align-items-center flex-md-row-reverse g-0 g-md-5"
                 style="justify-content: center !important;">
@@ -32,7 +32,7 @@
             </div>
         </div>
     </section>
-    <section class="py-5">
+    <section class="py-5" id="stats">
         <div class="container">
             <div class="row g-4">
                 <div class="col-12 text-center">
