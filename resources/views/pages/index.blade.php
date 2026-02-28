@@ -37,7 +37,7 @@
             <div class="row g-4">
                 <div class="col-12 text-center">
                     <h2 class="fw-bold text-primary mb-0">Statistik PeSarana</h2>
-                    <p class="text-muted mb-0">Ringkasan data sistem aspirasi sekolah</p>
+                    <p class="text-muted mb-0 ff-open-sans">Ringkasan data sistem aspirasi sekolah</p>
                 </div>
                 <div class="col-12 col-md-6 col-lg-3">
                     <div class="card border-0 h-100 text-center p-4">
@@ -73,6 +73,84 @@
                         </div>
                         <h3 class="fw-bold">{{ $stats['completed_aspirations_count'] }}</h3>
                         <p class="text-muted mb-0">Aspirasi Selesai</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-5" id="features">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-12 text-center">
+                    <h2 class="fw-bold text-primary mb-0">Fitur Unggulan PeSarana</h2>
+                    <p class="text-muted mb-0 ff-open-sans">Kemudahan pengelolaan aspirasi dan sarana sekolah</p>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card border-0 h-100 p-4">
+                        <div class="mb-3 text-primary">
+                            <i class="bi bi-pencil-square display-5 text-primary"></i>
+                        </div>
+                        <h5 class="fw-bold">Buat Aspirasi</h5>
+                        <p class="text-muted mb-0 ff-open-sans">
+                            Siswa dapat membuat laporan atau aspirasi terkait sarana dan prasarana sekolah secara mudah
+                            melalui dashboard.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card border-0 h-100 p-4">
+                        <div class="mb-3 text-primary">
+                            <i class="bi bi-clock-history display-5 text-primary"></i>
+                        </div>
+                        <h5 class="fw-bold">Tracking Status</h5>
+                        <p class="text-muted mb-0 ff-open-sans">
+                            Pantau perkembangan aspirasi mulai dari diproses hingga selesai.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card border-0 h-100 p-4">
+                        <div class="mb-3 text-primary">
+                            <i class="bi bi-chat-left-text-fill display-5 text-primary"></i>
+                        </div>
+                        <h5 class="fw-bold">Feedback Admin</h5>
+                        <p class="text-muted mb-0 ff-open-sans">
+                            Admin dapat memberikan tanggapan langsung terhadap setiap aspirasi yang dikirim oleh siswa.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card border-0 h-100 p-4">
+                        <div class="mb-3 text-primary">
+                            <i class="bi bi-shield-lock-fill display-5 text-primary"></i>
+                        </div>
+                        <h5 class="fw-bold">Autentikasi Aman</h5>
+                        <p class="text-muted mb-0 ff-open-sans">
+                            Sistem login dengan pengelolaan hak akses yang terstruktur.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card border-0 h-100 p-4">
+                        <div class="mb-3 text-primary">
+                            <i class="bi bi-bar-chart-fill display-5 text-primary"></i>
+                        </div>
+                        <h5 class="fw-bold">Statistik Dashboard</h5>
+                        <p class="text-muted mb-0 ff-open-sans">
+                            Menampilkan ringkasan data aspirasi, jumlah siswa, serta progres penyelesaian secara visual.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card border-0 h-100 p-4">
+                        <div class="mb-3 text-primary">
+                            <i class="bi bi-database-fill-gear display-5 text-primary"></i>
+                        </div>
+                        <h5 class="fw-bold">Manajemen Data</h5>
+                        <p class="text-muted mb-0 ff-open-sans">
+                            Admin dapat mengelola data siswa, kategori aspirasi, serta konfigurasi sistem dengan fitur CRUD
+                            lengkap.
+                        </p>
                     </div>
                 </div>
             </div>
