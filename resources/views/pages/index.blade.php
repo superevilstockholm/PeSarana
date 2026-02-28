@@ -156,4 +156,76 @@
             </div>
         </div>
     </section>
+    <section class="py-5" id="faq">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-12 text-center">
+                    <h2 class="fw-bold text-primary mb-0">FAQ PeSarana</h2>
+                    <p class="text-muted mb-0 ff-open-sans">
+                        Pertanyaan yang sering ditanyakan terkait sistem aspirasi sekolah
+                    </p>
+                </div>
+                <div class="col-12 col-lg-8 mx-auto">
+                    <div class="accordion mt-4" id="faqAccordion">
+                        <div class="accordion-item border-0 border-bottom rounded-top">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-semibold" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#faqOne">
+                                    Bagaimana cara membuat aspirasi?
+                                </button>
+                            </h2>
+                            <div id="faqOne" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body text-muted ff-open-sans">
+                                    Login sebagai siswa, masuk ke dashboard, lalu klik tombol
+                                    "Buat Aspirasi". Isi form yang tersedia dan kirim laporan.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0 border-bottom">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-semibold" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#faqTwo">
+                                    Apakah saya bisa melihat status aspirasi?
+                                </button>
+                            </h2>
+                            <div id="faqTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body text-muted ff-open-sans">
+                                    Ya. Setiap aspirasi memiliki status seperti diproses,
+                                    ditolak, atau selesai yang dapat dipantau melalui dashboard.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0 border-bottom">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-semibold" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#faqThree">
+                                    Siapa yang memproses aspirasi?
+                                </button>
+                            </h2>
+                            <div id="faqThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body text-muted ff-open-sans">
+                                    Aspirasi diproses oleh admin sekolah yang bertugas
+                                    meninjau, memberikan tanggapan, dan memperbarui status.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0 border-bottom rounded-bottom">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-semibold" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#faqFour">
+                                    Apakah data saya aman?
+                                </button>
+                            </h2>
+                            <div id="faqFour" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body text-muted ff-open-sans">
+                                    Ya. Sistem menggunakan autentikasi login dan pengelolaan
+                                    hak akses untuk memastikan keamanan data pengguna.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 @endsection

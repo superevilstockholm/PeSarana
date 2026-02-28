@@ -30,6 +30,11 @@
                             <i class="bi bi-grid me-1"></i> Fitur
                         </a>
                     </li>
+                    <li class="mb-2">
+                        <a href="#faq" class="text-decoration-none text-muted">
+                            <i class="bi bi-question-lg me-1"></i> FAQ
+                        </a>
+                    </li>
                 </ul>
             </div>
             <div class="col-6 col-lg-3">

@@ -20,6 +20,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#features">Fitur</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#faq">FAQ</a>
+                </li>
                 <li class="nav-item d-flex align-items-center d-md-none gap-3 fw-medium">
                     <a class="nav-link" href="{{ route('login') }}">Log In</a>
                     |
