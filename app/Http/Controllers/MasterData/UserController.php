@@ -130,6 +130,8 @@ class UserController extends Controller
             $user->student->update([
                 'user_id' => null,
             ]);
+        } else if ($user->role === RoleEnum::ADMIN && $validated['role'] === 'student' && $user->aspiration_feedbacks()->exists()) {
+            abort(400, 'Admin sudah pernah membuat feedback dan tidak dapat diubah menjadi student.');
         }
         if ($validated['role'] === 'student') {
             $student = Student::where('id', $validated['student_id'])->first();
