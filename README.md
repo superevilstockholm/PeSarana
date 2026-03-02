@@ -1,59 +1,171 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# PeSarana  
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Platform pengaduan dan pelaporan sarana/prasarana sekolah berbasis website. Dibuat menggunakan framework Laravel 12 dan database PostgreSQL.  
 
-## About Laravel
+## Database  
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+![ERD PeSarana - dbdiagram.io](repo_assets/ERD_PeSarana.svg)  
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+<h4 align="center">Gambar 1.1 ERD - PeSarana</h4>  
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+### Table Users  
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- id (primary key, auto increment)  
+- name (varchar(255), not null)  
+- email (varchar(255), not null, unique)  
+- password (varchar(255), not null)  
+- role (varchar(255), not null, default(student))  <!-- admin, student --> <!-- Kenapa gak enum? karena di PostgreSQL gak ada type data enum jadi di handle di backend pakai Laravel Enum -->
+- profile_picture_path (varchar(255), null)  
+- created_at (timestamp, null)  
+- updated_at (timestamp, null)  
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Table Classrooms  
 
-## Laravel Sponsors
+- id (primary key, auto increment)  
+- name (varchar(255), not null, unique)  
+- created_at (timestamp, null)  
+- updated_at (timestamp, null)  
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Table Students  
 
-### Premium Partners
+- id (primary key, auto increment)  
+- nisn (varchar(10), not null, unique)  
+- name (varchar(255), not null)  
+- dob (date, not null)  
+- classroom_id (foreignId(classrooms.id), not null, ondelete(cascade))  
+- user_id (foreignId(users.id), null, ondelete(set null))  
+- created_at (timestamp, null)  
+- updated_at (timestamp, null)  
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Table Categories  
 
-## Contributing
+- id (primary key, auto increment)  
+- name (varchar(255), not null, unique)  
+- created_at (timestamp, null)  
+- updated_at (timestamp, null)  
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Table  Aspirations  
 
-## Code of Conduct
+- id (primary key, auto increment)  
+- title (varchar(255), not null)  
+- content (text, null)  
+- location (varchar(255), not null)  
+- status (varchar(255), not null, default(pending))  <!-- pending, on_going, completed, rejected --> <!-- Kenapa gak enum? karena di PostgreSQL gak ada type data enum jadi di handle di backend pakai Laravel Enum -->
+- student_id (foreignId(students.id), not null, ondelete(cascade))  
+- category_id (foreignId(categories.id), not null, ondelete(cascade))  
+- created_at (timestamp, null)  
+- updated_at (timestamp, null)  
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Table Aspiration Images  
 
-## Security Vulnerabilities
+- id (primary key, auto increment)  
+- image_path (varchar(255), not null)  
+- aspiration_id (foreignId(aspirations.id), nota null, ondelete(cascade))  
+- created_at (timestamp, null)  
+- updated_at (timestamp, null)  
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Table Aspiration Feedbacks  
 
-## License
+- id (primary key, auto increment)  
+- content (text, null)  
+- status (varchar(255), not null)  <!-- pending, on_going, completed, rejected --> <!-- Kenapa gak enum? karena di PostgreSQL gak ada type data enum jadi di handle di backend pakai Laravel Enum -->
+- user_id (foreignId(users.id), null, ondelete(set null))  
+- aspiration_id (foreignId(aspirations.id), not null, ondelete(cascade))  
+- created_at (timestamp, null)  
+- updated_at (timestamp, null)  
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### dbdiagram.io script  
+
+```dbml
+Table users {
+  id BIGINT [pk, increment]
+  name VARCHAR(255) [not null]
+  email VARCHAR(255) [unique, not null]
+  password VARCHAR(255) [not null]
+  // role ENUM('admin', 'student') [default: 'student'] // MySQL - enum
+  role VARCHAR(255) [not null, default: 'student'] // PostgreSQL - string (admin, student)
+  profile_picture_path VARCHAR(255) [null]
+  created_at TIMESTAMP // [default: 'now()']
+  updated_at TIMESTAMP
+}
+
+Table classrooms {
+  id BIGINT [pk, increment]
+  name VARCHAR(255) [unique, not null]
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+}
+
+Table students {
+  id BIGINT [pk, increment]
+  nisn VARCHAR(10) [unique, not null]
+  name VARCHAR(255) [not null]
+  dob DATE [not null]
+  classroom_id BIGINT [not null]
+  user_id BIGINT [null, unique]
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+}
+
+Ref: students.classroom_id > classrooms.id [delete: cascade]
+Ref: students.user_id - users.id [delete: set null]
+
+Table categories {
+  id BIGINT [pk, increment]
+  name VARCHAR(255) [unique, not null]
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+}
+
+Table aspirations {
+  id BIGINT [pk, increment]
+  title VARCHAR(255) [not null]
+  content TEXT [null]
+  location VARCHAR(255) [not null]
+  // status ENUM('pending', 'on_progress', 'completed', 'rejected') [default: 'pending'] // MySQL - enum
+  status VARCHAR(255) [not null, default: 'pending'] // PostgreSQL - string (pending, on_progress, completed, rejected)
+  student_id BIGINT [not null]
+  category_id BIGINT [not null]
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+}
+
+Ref: aspirations.student_id > students.id [delete: cascade]
+Ref: aspirations.category_id > categories.id [delete: cascade]
+
+Table aspiration_images {
+  id BIGINT [pk, increment]
+  image_path VARCHAR(255) [not null]
+  aspiration_id BIGINT [not null]
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+}
+
+Ref: aspiration_images.aspiration_id > aspirations.id [delete: cascade]
+
+Table aspiration_feedbacks {
+  id BIGINT [pk, increment]
+  content TEXT [null]
+  // status ENUM('pending', 'on_progress', 'completed', 'rejected') // MySQL - enum
+  status VARCHAR(255) [not null] // PostgreSQL - string (pending, on_progress, completed, rejected)
+  user_id BIGINT [null]
+  aspiration_id BIGINT [not null]
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+}
+
+Ref: aspiration_feedbacks.aspiration_id > aspirations.id [delete: cascade]
+Ref: aspiration_feedbacks.user_id - users.id [delete: set null]
+```  
+
+## Flowchart  
+
+![Flowchart PeSarana - app.diagram.com](repo_assets/Flowchart_PeSarana.svg)  
+
+<h4 align="center">Gambar 2.1 Flowchart - PeSarana</h4>  
+
+---
+
+
