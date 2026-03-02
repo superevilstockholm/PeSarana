@@ -188,7 +188,7 @@ Table aspiration_feedbacks {
 }
 
 Ref: aspiration_feedbacks.aspiration_id > aspirations.id [delete: cascade]
-Ref: aspiration_feedbacks.user_id - users.id [delete: set null]
+Ref: aspiration_feedbacks.user_id > users.id [delete: set null]
 ```  
 
 ## 2. Flowchart  
