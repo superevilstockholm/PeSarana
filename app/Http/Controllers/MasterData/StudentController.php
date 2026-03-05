@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\MasterData;
 
+use Carbon\Carbon;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -22,7 +23,31 @@ class StudentController extends Controller
         if ($limit > 100) {
             $limit = 100;
         }
-        $students = Student::with(['classroom', 'user'])->paginate($limit)->appends($request->except('page'));
+        $query = Student::query()->with(['classroom', 'user']);
+
+        $allowed_types = [
+            'nisn', 'name', 'date'
+        ];
+        $type = $request->query('type');
+        if (in_array($type, $allowed_types)) {
+            if ($type === 'date') {
+                $start_date = $request->query('start_date');
+                if ($start_date) {
+                    $query->whereDate('created_at', '>=', Carbon::parse($start_date)->startOfDay());
+                }
+                $end_date = $request->query('end_date');
+                if ($end_date) {
+                    $query->whereDate('created_at', '<=', Carbon::parse($end_date)->endOfDay());
+                }
+            } else {
+                $search = $request->query('search');
+                if ($search) {
+                    $query->where($type, 'ILIKE', '%' . $search . '%');
+                }
+            }
+        }
+
+        $students = $query->paginate($limit)->appends($request->except('page'));
         return view('pages.dashboard.admin.master-data.student.index', [
             'meta' => [
                 'sidebarItems' => adminSidebarItems(),
