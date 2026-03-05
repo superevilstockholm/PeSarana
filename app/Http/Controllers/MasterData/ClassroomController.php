@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\MasterData;
 
+use Carbon\Carbon;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -21,7 +22,31 @@ class ClassroomController extends Controller
         if ($limit > 100) {
             $limit = 100;
         }
-        $classrooms = Classroom::withCount('students')->paginate($limit)->appends($request->except('page'));
+        $query = Classroom::query()->withCount('students');
+
+        $allowed_types = [
+            'name', 'date'
+        ];
+        $type = $request->query('type');
+        if (in_array($type, $allowed_types)) {
+            if ($type === 'date') {
+                $start_date = $request->query('start_date');
+                if ($start_date) {
+                    $query->whereDate('created_at', '>=', Carbon::parse($start_date)->startOfDay());
+                }
+                $end_date = $request->query('end_date');
+                if ($end_date) {
+                    $query->whereDate('created_at', '<=', Carbon::parse($end_date)->endOfDay());
+                }
+            } else {
+                $search = $request->query('search');
+                if ($search) {
+                    $query->where($type, 'ILIKE', '%' . $search . '%');
+                }
+            }
+        }
+
+        $classrooms = $query->paginate($limit)->appends($request->except('page'));
         return view('pages.dashboard.admin.master-data.classroom.index', [
             'meta' => [
                 'sidebarItems' => adminSidebarItems(),
