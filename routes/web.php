@@ -11,6 +11,9 @@ use App\Http\Controllers\AuthController;
 // Dashboard Controller
 use App\Http\Controllers\DashboardController;
 
+// Notification Controller
+use App\Http\Controllers\NotificationController;
+
 // Master Data Controllers
 use App\Http\Controllers\MasterData\UserController;
 use App\Http\Controllers\MasterData\StudentController;
@@ -36,6 +39,9 @@ Route::middleware(['auth'])->group(function () {
         // Admin
         Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
             Route::get('/', [DashboardController::class, 'admin_dashboard'])->name('index');
+            Route::resource('notifications', NotificationController::class)->parameters([
+                'notifications' => 'notification'
+            ])->only(['index', 'show', 'destroy']);
             // Master Data
             Route::prefix('master-data')->name('master-data.')->group(function () {
                 Route::resource('classrooms', ClassroomController::class)->parameters([
@@ -64,6 +70,9 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('aspirations', AspirationController::class)->parameters([
                 'aspirations' => 'aspiration'
             ]);
+            Route::resource('notifications', NotificationController::class)->parameters([
+                'notifications' => 'notification'
+            ])->only(['index', 'show', 'destroy']);
         });
     });
 });
