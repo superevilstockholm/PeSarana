@@ -96,55 +96,54 @@
                             <div class="col-md-8 fw-medium">Belum ada feedback.</div>
                         </div>
                     @else
-                        @foreach ($aspiration->aspiration_feedbacks as $feedback)
-                            <div class="row mb-3">
-                                <div class="col-md-4 text-muted">Status</div>
-                                <div class="col-md-8 fw-medium d-flex justify-content-between align-items-center">
-                                    <span>{{ $feedback->status->label() ?? '-' }}</span>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-4 text-muted">Pembuat Feedback</div>
-                                <div class="col-md-8 fw-medium d-flex justify-content-between align-items-center">
-                                    <span>{{ $feedback->user?->name ? ucwords(strtolower($feedback->user->name)) : '-' }}</span>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-4 text-muted">Tindakan</div>
-                                <div class="col-md-8 fw-medium d-flex justify-content-between align-items-center">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <button type="button" class="btn btn-sm btn-warning btn-edit-feedback"
-                                            data-id="{{ $feedback->id }}" data-content="{{ $feedback->content }}">
-                                            <i class="ti ti-edit"></i>
-                                        </button>
-                                        @if (
-                                            $loop->last &&
-                                                in_array($feedback->status, [
-                                                    AspirationStatusEnum::COMPLETED,
-                                                    AspirationStatusEnum::ON_GOING,
-                                                    AspirationStatusEnum::REJECTED,
-                                                ]))
-                                            <form class="p-0 m-0"
-                                                action="{{ route('dashboard.admin.master-data.aspiration-feedbacks.destroy', $feedback->id) }}"
-                                                method="POST" id="form-delete-feedback-{{ $feedback->id }}"
-                                                class="ms-3">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" class="btn btn-sm btn-danger btn-delete-feedback"
-                                                    data-id="{{ $feedback->id }}">
-                                                    <i class="ti ti-trash"></i>
+                        <div class="timeline">
+                            @foreach ($aspiration->aspiration_feedbacks as $feedback)
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <strong>{{ $feedback->status->label() ?? '-' }}</strong>
+                                            <div class="d-flex gap-2">
+                                                <button type="button"
+                                                    class="btn btn-sm btn-warning btn-edit-feedback"
+                                                    data-id="{{ $feedback->id }}"
+                                                    data-content="{{ $feedback->content }}">
+                                                    <i class="ti ti-edit"></i>
                                                 </button>
-                                            </form>
-                                        @endif
+                                                @if (
+                                                    $loop->last &&
+                                                    in_array($feedback->status, [
+                                                        AspirationStatusEnum::COMPLETED,
+                                                        AspirationStatusEnum::ON_GOING,
+                                                        AspirationStatusEnum::REJECTED,
+                                                    ])
+                                                )
+                                                <form action="{{ route('dashboard.admin.master-data.aspiration-feedbacks.destroy', $feedback->id) }}"
+                                                    method="POST"
+                                                    id="form-delete-feedback-{{ $feedback->id }}"
+                                                    class="m-0">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-danger btn-delete-feedback"
+                                                        data-id="{{ $feedback->id }}">
+                                                        <i class="ti ti-trash"></i>
+                                                    </button>
+                                                </form>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="text-muted small mb-2">
+                                            Oleh:
+                                            {{ $feedback->user?->name ? ucwords(strtolower($feedback->user->name)) : '-' }}
+                                        </div>
+                                        <div class="markdown-content">
+                                            {!! $feedback->content ? Str::markdown($feedback->content) : '-' !!}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-12 text-muted mb-3">Konten</div>
-                                <div class="col-md-12 fw-normal fs-6 markdown-content">{!! $feedback->content ? Str::markdown($feedback->content) : '-' !!}</div>
-                            </div>
-                            <hr {{ $loop->last ? 'class=mb-0' : '' }}>
-                        @endforeach
+                            @endforeach
+                        </div>
                     @endif
                     @if ($aspiration->status === AspirationStatusEnum::PENDING || $aspiration->status === AspirationStatusEnum::ON_GOING)
                         <h4 class="card-title fw-semibold mt-4 mb-3">Tambah Feedback</h4>
@@ -318,3 +317,40 @@
         }
     </style>
 @endsection
+@push('css')
+    <style>
+        .markdown-content p,
+        .markdown-content ul {
+            margin-bottom: 0 !important;
+        }
+        .timeline {
+            position: relative;
+            padding-left: 2px;
+        }
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #dee2e6;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: -2px;
+            top: 7px;
+            width: 16px;
+            height: 16px;
+            background: #0d6efd;
+            border-radius: 50%;
+        }
+        .timeline-content {
+            padding-left: 25px;
+        }
+    </style>
+@endpush
