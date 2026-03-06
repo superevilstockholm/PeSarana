@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('aspiration_feedbacks', function (Blueprint $table) {
             $table->id();
-            $table->text('description');
+            $table->text('content')->nullable();
             $table->string('status');
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('aspiration_id')->constrained()->cascadeOnDelete();

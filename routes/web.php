@@ -2,15 +2,24 @@
 
 use Illuminate\Support\Facades\Route;
 
+// Home Controller
+use App\Http\Controllers\HomeController;
+
 // Auth Controller
 use App\Http\Controllers\AuthController;
 
-// Master Data Controllers
-use App\Http\Controllers\MasterData\AspirationController;
+// Dashboard Controller
+use App\Http\Controllers\DashboardController;
 
-Route::get('/', function () {
-    return view('pages.index');
-})->name('index');
+// Master Data Controllers
+use App\Http\Controllers\MasterData\UserController;
+use App\Http\Controllers\MasterData\StudentController;
+use App\Http\Controllers\MasterData\CategoryController;
+use App\Http\Controllers\MasterData\ClassroomController;
+use App\Http\Controllers\MasterData\AspirationController;
+use App\Http\Controllers\MasterData\AspirationFeedbackController;
+
+Route::get('/', [HomeController::class, 'index'])->name('index');
 
 Route::middleware(['guest'])->group(function () {
     // Auth
@@ -26,32 +35,32 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
         // Admin
         Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
-            Route::get('/', function () {
-                return view('pages.dashboard.admin.index', [
-                    'meta' => [
-                        'sidebarItems' => adminSidebarItems(),
-                    ]
-                ]);
-            })->name('index');
+            Route::get('/', [DashboardController::class, 'admin_dashboard'])->name('index');
             // Master Data
             Route::prefix('master-data')->name('master-data.')->group(function () {
+                Route::resource('classrooms', ClassroomController::class)->parameters([
+                    'classrooms' => 'classroom',
+                ])->except(['show']);
+                Route::resource('categories', CategoryController::class)->parameters([
+                    'categories' => 'category',
+                ])->except(['show']);
+                Route::resource('students', StudentController::class)->parameters([
+                    'students' => 'student',
+                ]);
+                Route::resource('users', UserController::class)->parameters([
+                    'users' => 'user',
+                ]);
                 Route::resource('aspirations', AspirationController::class)->parameters([
                     'aspirations' => 'aspiration'
                 ])->only(['index', 'show', 'destroy']);
-                Route::resource('aspiration-feedbacks', null)->parameters([
+                Route::resource('aspiration-feedbacks', AspirationFeedbackController::class)->parameters([
                     'aspiration-feedbacks' => 'aspirationFeedback'
-                ]);
+                ])->only(['store', 'update', 'destroy']);
             });
         });
         // Student
         Route::middleware(['role:student'])->prefix('student')->name('student.')->group(function () {
-            Route::get('/', function () {
-                return view('pages.dashboard.student.index', [
-                    'meta' => [
-                        'sidebarItems' => studentSidebarItems(),
-                    ]
-                ]);
-            })->name('index');
+            Route::get('/', [DashboardController::class, 'student_dashboard'])->name('index');
             Route::resource('aspirations', AspirationController::class)->parameters([
                 'aspirations' => 'aspiration'
             ]);

@@ -5,19 +5,61 @@ namespace App\Http\Controllers;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
+
+// Models
+use App\Models\User;
+use App\Models\MasterData\Student;
+
+// Enums
+use App\Enums\RoleEnum;
 
 class AuthController extends Controller
 {
-    public function signup(Request $request)
+    public function signup(Request $request): View | RedirectResponse
     {
-
+        if ($request->isMethod('get')) {
+            return view('pages.auth.signup', [
+                'meta' => [
+                    'showNavbar' => false,
+                    'showFooter' => false
+                ]
+            ]);
+        }
+        $validated = $request->validate([
+            'nisn' => ['required', 'digits:10'],
+            'dob' => ['date'],
+            'email' => ['required', 'email', 'max:255'],
+            'password' => ['required', 'string', 'max:255'],
+        ]);
+        $student = Student::where('nisn', $validated['nisn'])->where('dob', $validated['dob'])->first();
+        if (!$student) {
+            return back()->withErrors('NISN atau Tanggal Lahir salah')->withInput($request->except('password'));
+        }
+        if ($student->user) {
+            return back()->withErrors('Siswa sudah memiliki akun.')->withInput($request->except(['nisn', 'dob', 'password']));
+        }
+        unset($validated['nisn'], $validated['dob']);
+        $validated['name'] = $student->name;
+        $validated['password'] = Hash::make($validated['password']);
+        $validated['role'] = RoleEnum::STUDENT;
+        $user = User::create($validated);
+        $student->update([
+            'user_id' => $user->id,
+        ]);
+        return redirect()->route('login')->with('success', 'Berhasil daftar, silakan masuk');
     }
 
     public function login(Request $request): View | RedirectResponse
     {
         if ($request->isMethod('get')) {
-            return view('pages.auth.login');
+            return view('pages.auth.login', [
+                'meta' => [
+                    'showNavbar' => false,
+                    'showFooter' => false
+                ]
+            ]);
         }
         $validated = $request->validate([
             'email' => ['required', 'email', 'max:255'],

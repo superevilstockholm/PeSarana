@@ -32,7 +32,8 @@
             <div class="card my-0">
                 <div class="card-body">
                     <form method="GET" action="{{ route('dashboard.student.aspirations.index') }}" id="filterForm">
-                        <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-3 gap-2 gap-md-0">
+                        <div
+                            class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-3 gap-2 gap-md-0">
                             <div class="d-flex align-items-center">
                                 @php
                                     $limits = [5, 10, 25, 50, 100];
@@ -84,10 +85,14 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <img class="object-fit-cover rounded" style="width: 100px; height: 100px; object-position: center;" src="{{ $aspiration->aspiration_images->first() ? $aspiration->aspiration_images->first()->image_path_url : asset('static/img/no-image-placeholder.svg') }}" alt="{{ $aspiration->title ?? '-' }}">
+                                            <img class="object-fit-cover rounded"
+                                                style="width: 100px; height: 100px; object-position: center;"
+                                                src="{{ $aspiration->aspiration_images->first() ? $aspiration->aspiration_images->first()->image_path_url : asset('static/img/no-image-placeholder.svg') }}"
+                                                alt="{{ $aspiration->title ?? '-' }}">
                                         </td>
                                         <td>{{ $aspiration->title ?? '-' }}</td>
-                                        <td>{{ $aspiration->content ? Str::limit($aspiration->content, 60, '...') : '-' }}</td>
+                                        <td>{{ $aspiration->content ? Str::limit($aspiration->content, 60, '...') : '-' }}
+                                        </td>
                                         <td>{{ $aspiration->status?->label() ?? '-' }}</td>
                                         <td>{{ $aspiration->created_at?->format('d M Y H:i') }}</td>
                                         <td class="text-center">
@@ -113,7 +118,8 @@
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="button" class="dropdown-item text-danger btn-delete"
-                                                            data-id="{{ $aspiration->id }}" data-name="{{ $aspiration->title }}">
+                                                            data-id="{{ $aspiration->id }}"
+                                                            data-name="{{ $aspiration->title }}">
                                                             <i class="ti ti-trash me-1 text-danger"></i> Hapus
                                                         </button>
                                                     </form>
@@ -152,7 +158,8 @@
                     const aspirationTitle = this.getAttribute('data-name');
                     Swal.fire({
                         title: "Hapus Aspirasi?",
-                        text: "Apakah Anda yakin ingin menghapus aspirasi \"" + aspirationTitle + "\"? Aksi ini tidak dapat dibatalkan.",
+                        text: "Apakah Anda yakin ingin menghapus aspirasi \"" +
+                            aspirationTitle + "\"? Aksi ini tidak dapat dibatalkan.",
                         icon: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#d33",

@@ -9,35 +9,36 @@
                     @php
                         $segments = collect(request()->segments());
                         $category = $segments->get(1);
-                        $item     = $segments->get(2);
-                        $subitem  = $segments->get(3);
+                        $item = $segments->get(2);
+                        $subitem = $segments->get(3);
                         $isDashboardOnly = request()->is('dashboard');
                     @endphp
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb bg-transparent mb-0">
                             <li class="breadcrumb-item {{ $isDashboardOnly ? 'active' : 'fw-medium' }}"
-                                @if($isDashboardOnly) aria-current="page" @endif>
-                                @if($isDashboardOnly)
+                                @if ($isDashboardOnly) aria-current="page" @endif>
+                                @if ($isDashboardOnly)
                                     Dashboard
                                 @else
-                                    <a href="{{ route('dashboard.' . auth()->user()->role->value . '.index') }}">Dashboard</a>
+                                    <a
+                                        href="{{ route('dashboard.' . auth()->user()->role->value . '.index') }}">Dashboard</a>
                                 @endif
                             </li>
-                            @if($item)
+                            @if ($item)
                                 @php
                                     $itemLabel = ucwords(str_replace('-', ' ', $item));
-                                    $itemUrl   = url("dashboard/$category/$item");
+                                    $itemUrl = url("dashboard/$category/$item");
                                 @endphp
                                 <li class="breadcrumb-item {{ $subitem ? 'fw-medium' : 'active' }}"
-                                    @if(!$subitem) aria-current="page" @endif>
-                                    @if($subitem)
+                                    @if (!$subitem) aria-current="page" @endif>
+                                    @if ($subitem)
                                         <a href="{{ $itemUrl }}">{{ $itemLabel }}</a>
                                     @else
                                         {{ $itemLabel }}
                                     @endif
                                 </li>
                             @endif
-                            @if($subitem)
+                            @if ($subitem)
                                 @php
                                     $subLabel = ucwords(str_replace('-', ' ', $subitem));
                                 @endphp
@@ -65,15 +66,15 @@
     </footer>
 @endsection
 @push('css')
-<link rel="stylesheet" href="{{ asset('static/css/tabler-icons/tabler-icons.min.css') }}">
-<link rel="stylesheet" href="{{ asset('static/css/style.css') }}">
-<link rel="stylesheet" href="{{ asset('static/css/style-preset.css') }}">
-<link rel="stylesheet" href="{{ asset('static/css/custom.css') }}">
+    <link rel="stylesheet" href="{{ asset('static/css/tabler-icons/tabler-icons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('static/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('static/css/style-preset.css') }}">
+    <link rel="stylesheet" href="{{ asset('static/css/custom.css') }}">
 @endpush
 @push('js')
-<script src="{{ asset('static/js/sweetalert2.min.js') }}"></script>
-<script src="{{ asset('static/js/plugins/popper.min.js') }}"></script>
-<script src="{{ asset('static/js/plugins/simplebar.min.js') }}"></script>
-<script src="{{ asset('static/js/plugins/feather.min.js') }}"></script>
-<script src="{{ asset('static/js/script.js') }}"></script>
+    <script src="{{ asset('static/js/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset('static/js/plugins/popper.min.js') }}"></script>
+    <script src="{{ asset('static/js/plugins/simplebar.min.js') }}"></script>
+    <script src="{{ asset('static/js/plugins/feather.min.js') }}"></script>
+    <script src="{{ asset('static/js/script.js') }}"></script>
 @endpush

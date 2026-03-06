@@ -1,10 +1,10 @@
 @extends('layouts.dashboard')
-@section('title', 'Data Aspirasi - ' . config('app.name'))
+@section('title', 'Data Pengguna - ' . config('app.name'))
 @section('content')
     <x-alerts :errors="$errors" />
     @php
+        use App\Enums\RoleEnum;
         use Illuminate\Support\Str;
-        use App\Enums\AspirationStatusEnum;
         use Illuminate\Contracts\Pagination\LengthAwarePaginator;
     @endphp
     <div class="row mb-4">
@@ -13,8 +13,14 @@
                 <div
                     class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-2 gap-lg-5">
                     <div class="d-flex flex-column">
-                        <h3 class="p-0 m-0 mb-1 fw-semibold">Data Aspirasi</h3>
-                        <p class="p-0 m-0 fw-medium text-muted">Manajemen data aspirasi siswa.</p>
+                        <h3 class="p-0 m-0 mb-1 fw-semibold">Data Pengguna</h3>
+                        <p class="p-0 m-0 fw-medium text-muted">Manajemen data pengguna siswa.</p>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <a href="{{ route('dashboard.admin.master-data.users.create') }}"
+                            class="btn btn-sm btn-primary px-4 rounded-pill m-0">
+                            <i class="ti ti-plus me-1"></i> Tambah Pengguna
+                        </a>
                     </div>
                 </div>
             </div>
@@ -24,8 +30,7 @@
         <div class="col">
             <div class="card my-0">
                 <div class="card-body">
-                    <form method="GET" action="{{ route('dashboard.admin.master-data.aspirations.index') }}"
-                        id="filterForm">
+                    <form method="GET" action="{{ route('dashboard.admin.master-data.users.index') }}" id="filterForm">
                         <div
                             class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-3 gap-2 gap-md-0">
                             <div class="d-flex align-items-center">
@@ -46,11 +51,11 @@
                                 <span class="ms-2">entries</span>
                             </div>
                             <div class="text-muted small">
-                                @if ($aspirations instanceof LengthAwarePaginator)
-                                    Menampilkan {{ $aspirations->firstItem() }} hingga {{ $aspirations->lastItem() }} dari
-                                    {{ $aspirations->total() }} total entri
+                                @if ($users instanceof LengthAwarePaginator)
+                                    Menampilkan {{ $users->firstItem() }} hingga {{ $users->lastItem() }} dari
+                                    {{ $users->total() }} total entri
                                 @else
-                                    Menampilkan {{ $aspirations->count() }} total entri
+                                    Menampilkan {{ $users->count() }} total entri
                                 @endif
                             </div>
                         </div>
@@ -59,10 +64,9 @@
                             <div class="form-floating" style="min-width: 180px;">
                                 @php
                                     $filterTypes = [
-                                        'title' => 'Judul',
-                                        'content' => 'Konten',
-                                        'location' => 'Lokasi',
-                                        'status' => 'Status',
+                                        'name' => 'Nama',
+                                        'email' => 'Email',
+                                        'role' => 'Role',
                                         'date' => 'Tanggal Dibuat',
                                     ];
                                     $currentType = request('type') ?: array_key_first($filterTypes);
@@ -82,18 +86,18 @@
                                     id="filterTextInput" placeholder="Masukan kata kunci" value="{{ request('search') }}">
                                 <label for="filterTextInput">Masukan kata kunci</label>
                             </div>
-                            {{-- Select Status --}}
-                            <div class="form-floating flex-grow-1 d-none" id="filterStatusWrapper">
-                                <select name="status" class="form-select form-select-sm">
-                                    <option value="">-- Pilih Status --</option>
-                                    @foreach (AspirationStatusEnum::cases() as $status)
-                                        <option value="{{ $status->value }}"
-                                            {{ request('status') === $status->value ? 'selected' : '' }}>
-                                            {{ $status->label() }}
+                            {{-- Select Role --}}
+                            <div class="form-floating flex-grow-1 d-none" id="filterRoleWrapper">
+                                <select name="role" class="form-select form-select-sm">
+                                    <option value="">-- Pilih Role --</option>
+                                    @foreach (RoleEnum::cases() as $role)
+                                        <option value="{{ $role->value }}"
+                                            {{ request('role') === $role->value ? 'selected' : '' }}>
+                                            {{ ucwords(strtolower($role->value)) }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <label>Pilih Status</label>
+                                <label>Pilih Role</label>
                             </div>
                             {{-- Date Fields --}}
                             <div class="form-floating flex-grow-1 d-none" id="filterStartDateWrapper">
@@ -109,32 +113,31 @@
                             <button type="submit" class="btn btn-primary d-flex align-items-center justify-content-center">
                                 <i class="ti ti-search"></i> Cari
                             </button>
-                            <a href="{{ route('dashboard.admin.master-data.aspirations.index') }}"
+                            <a href="{{ route('dashboard.admin.master-data.users.index') }}"
                                 class="btn btn-secondary d-flex align-items-center justify-content-center">
                                 <i class="ti ti-rotate-clockwise-2"></i> Reset
                             </a>
                         </div>
                     </form>
-                    <div class="table-responsive @if (!($aspirations instanceof LengthAwarePaginator && $aspirations->hasPages())) mb-0 @else mb-3 @endif">
+                    <div class="table-responsive @if (!($users instanceof LengthAwarePaginator && $users->hasPages())) mb-0 @else mb-3 @endif">
                         <table class="table table-striped table-hover align-middle mb-0">
                             <thead>
                                 <tr>
                                     <th class="text-center">#</th>
-                                    <th>Gambar Cover</th>
-                                    <th>Judul</th>
-                                    <th>Konten</th>
-                                    <th>Status</th>
-                                    <th>Dibuat Oleh</th>
+                                    <th>Foto Profil</th>
+                                    <th>Nama</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
                                     <th>Dibuat Pada</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($aspirations as $index => $aspiration)
+                                @forelse ($users as $index => $user)
                                     <tr>
                                         <td class="text-center">
-                                            @if ($aspirations instanceof LengthAwarePaginator)
-                                                {{ $aspirations->firstItem() + $loop->index }}
+                                            @if ($users instanceof LengthAwarePaginator)
+                                                {{ $users->firstItem() + $loop->index }}
                                             @else
                                                 {{ $loop->iteration }}
                                             @endif
@@ -142,16 +145,13 @@
                                         <td>
                                             <img class="object-fit-cover rounded"
                                                 style="width: 100px; height: 100px; object-position: center;"
-                                                src="{{ $aspiration->aspiration_images->first() ? $aspiration->aspiration_images->first()->image_path_url : asset('static/img/no-image-placeholder.svg') }}"
-                                                alt="{{ $aspiration->title ?? '-' }}">
+                                                src="{{ $user->profile_picture_path_url }}"
+                                                alt="{{ $user->name ? ucwords(strtolower($user->name)) : '-' }}">
                                         </td>
-                                        <td>{{ $aspiration->title ?? '-' }}</td>
-                                        <td>{{ $aspiration->content ? Str::limit($aspiration->content, 60, '...') : '-' }}
-                                        </td>
-                                        <td>{{ $aspiration->status?->label() ?? '-' }}</td>
-                                        <td>{{ $aspiration->student?->name ? ucwords(strtolower($aspiration->student->name)) : '-' }}
-                                        </td>
-                                        <td>{{ $aspiration->created_at?->format('d M Y H:i') }}</td>
+                                        <td>{{ $user->name ?? '-' }}</td>
+                                        <td>{{ $user->email ?? '-' }}</td>
+                                        <td>{{ $user->role->label() ?? '-' }}</td>
+                                        <td>{{ $user->created_at?->format('d M Y H:i') }}</td>
                                         <td class="text-center">
                                             <div class="dropdown">
                                                 <button type="button" class="btn border-0 p-0 dropdown-toggle hide-arrow"
@@ -160,17 +160,20 @@
                                                 </button>
                                                 <div class="dropdown-menu dropdown-menu-end">
                                                     <a class="dropdown-item"
-                                                        href="{{ route('dashboard.admin.master-data.aspirations.show', $aspiration->id) }}">
+                                                        href="{{ route('dashboard.admin.master-data.users.show', $user->id) }}">
                                                         <i class="ti ti-eye me-1"></i> Lihat
                                                     </a>
-                                                    <form id="form-delete-{{ $aspiration->id }}"
-                                                        action="{{ route('dashboard.admin.master-data.aspirations.destroy', $aspiration->id) }}"
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('dashboard.admin.master-data.users.edit', $user->id) }}">
+                                                        <i class="ti ti-pencil me-1"></i> Edit
+                                                    </a>
+                                                    <form id="form-delete-{{ $user->id }}"
+                                                        action="{{ route('dashboard.admin.master-data.users.destroy', $user->id) }}"
                                                         method="POST">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="button" class="dropdown-item text-danger btn-delete"
-                                                            data-id="{{ $aspiration->id }}"
-                                                            data-name="{{ $aspiration->title }}">
+                                                            data-id="{{ $user->id }}" data-name="{{ $user->name }}">
                                                             <i class="ti ti-trash me-1 text-danger"></i> Hapus
                                                         </button>
                                                     </form>
@@ -180,9 +183,9 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="text-center">
+                                        <td colspan="6" class="text-center">
                                             <div class="alert alert-warning my-2" role="alert">
-                                                Tidak ada data aspirasi yang ditemukan dengan kriteria tersebut.
+                                                Tidak ada data pengguna yang ditemukan dengan kriteria tersebut.
                                             </div>
                                         </td>
                                     </tr>
@@ -190,10 +193,10 @@
                             </tbody>
                         </table>
                     </div>
-                    @if ($aspirations instanceof LengthAwarePaginator && $aspirations->hasPages())
+                    @if ($users instanceof LengthAwarePaginator && $users->hasPages())
                         <div class="overflow-x-auto mt-0 py-1">
                             <div class="d-flex justify-content-center d-md-block w-100 px-3">
-                                {{ $aspirations->onEachSide(1)->links('vendor.pagination.bootstrap-5') }}
+                                {{ $users->onEachSide(1)->links('vendor.pagination.bootstrap-5') }}
                             </div>
                         </div>
                     @endif
@@ -205,12 +208,12 @@
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.btn-delete').forEach(function(btn) {
                 btn.addEventListener('click', function() {
-                    const aspirationId = this.getAttribute('data-id');
-                    const aspirationTitle = this.getAttribute('data-name');
+                    const userId = this.getAttribute('data-id');
+                    const userName = this.getAttribute('data-name');
                     Swal.fire({
-                        title: "Hapus Aspirasi?",
-                        text: "Apakah Anda yakin ingin menghapus aspirasi \"" +
-                            aspirationTitle + "\"? Aksi ini tidak dapat dibatalkan.",
+                        title: "Hapus Pengguna?",
+                        text: "Apakah Anda yakin ingin menghapus Pengguna \"" + userName +
+                            "\"? Aksi ini tidak dapat dibatalkan.",
                         icon: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#d33",
@@ -219,7 +222,7 @@
                         cancelButtonText: "Batal"
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            document.getElementById('form-delete-' + aspirationId).submit();
+                            document.getElementById('form-delete-' + userId).submit();
                         }
                     });
                 });
@@ -228,7 +231,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const typeSelect = document.getElementById('filterType');
             const textInputWrapper = document.getElementById('filterTextWrapper');
-            const statusWrapper = document.getElementById('filterStatusWrapper');
+            const roleWrapper = document.getElementById('filterRoleWrapper');
             const startDateWrapper = document.getElementById('filterStartDateWrapper');
             const endDateWrapper = document.getElementById('filterEndDateWrapper');
             function updateFilterFields() {
@@ -240,12 +243,12 @@
                     return;
                 }
                 if (value === 'date') {
-                    statusWrapper.classList.add('d-none');
+                    roleWrapper.classList.add('d-none');
                     textInputWrapper.classList.add('d-none');
                     startDateWrapper.classList.remove('d-none');
                     endDateWrapper.classList.remove('d-none');
-                } else if (value === 'status') {
-                    statusWrapper.classList.remove('d-none');
+                } else if (value === 'role') {
+                    roleWrapper.classList.remove('d-none');
                     textInputWrapper.classList.add('d-none');
                     startDateWrapper.classList.add('d-none');
                     endDateWrapper.classList.add('d-none');
@@ -253,7 +256,7 @@
                     textInputWrapper.classList.remove('d-none');
                     startDateWrapper.classList.add('d-none');
                     endDateWrapper.classList.add('d-none');
-                    statusWrapper.classList.add('d-none');
+                    roleWrapper.classList.add('d-none');
                 }
             }
             updateFilterFields();
