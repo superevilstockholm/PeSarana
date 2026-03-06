@@ -334,7 +334,7 @@
             top: 0;
             bottom: 0;
             width: 2px;
-            background: #dee2e6;
+            background: rgba(var(--bs-body-color-rgb), 0.5);
         }
         .timeline-item {
             position: relative;
