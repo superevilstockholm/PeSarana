@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\MasterData;
 
+use Carbon\Carbon;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -28,7 +29,36 @@ class AspirationController extends Controller
         if ($limit > 100) {
             $limit = 100;
         }
-        $aspirations = Aspiration::with(['student', 'category'])->paginate($limit)->appends($request->except('page'));
+        $query = Aspiration::query()->with(['student', 'category']);
+
+        $allowed_types = [
+            'title', 'content', 'location', 'status', 'date'
+        ];
+        $type = $request->query('type');
+        if (in_array($type, $allowed_types)) {
+            if ($type === 'date') {
+                $start_date = $request->query('start_date');
+                if ($start_date) {
+                    $query->whereDate('created_at', '>=', Carbon::parse($start_date)->startOfDay());
+                }
+                $end_date = $request->query('end_date');
+                if ($end_date) {
+                    $query->whereDate('created_at', '<=', Carbon::parse($end_date)->endOfDay());
+                }
+            } else if ($type === 'status') {
+                $status = $request->query('status');
+                if ($status) {
+                    $query->where($type, $status);
+                }
+            } else {
+                $search = $request->query('search');
+                if ($search) {
+                    $query->where($type, 'ILIKE', '%' . $search . '%');
+                }
+            }
+        }
+
+        $aspirations = $query->paginate($limit)->appends($request->except('page'));
         return view($user_role === 'admin'
             ? 'pages.dashboard.admin.master-data.aspiration.index'
             : 'pages.dashboard.student.aspiration.index', [
