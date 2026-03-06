@@ -27,8 +27,6 @@
                                         name="password" value="{{ old('password') }}" autocomplete="current-password">
                                 </div>
                                 <x-alerts :errors="$errors"></x-alerts>
-                                <p class="text-end p-0 m-0 mb-2">Lupa password? <a class="text-primary" href="#">Reset
-                                        disini!</a></p>
                                 <button class="btn btn-sm btn-primary w-100 mb-2" type="submit">Masuk</button>
                                 <p class="p-0 m-0">Tidak memiliki akun? <a class="text-primary"
                                         href="{{ route('signup') }}">Daftar Disini!</a></p>
