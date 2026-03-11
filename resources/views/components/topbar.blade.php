@@ -19,11 +19,10 @@
             <ul class="list-unstyled">
                 {{-- Notification --}}
                 @php
-                    use App\Models\Notification;
                     use Illuminate\Support\Facades\Auth;
                     $user = Auth::user();
-                    $unread_notifications = Notification::where('user_id', $user->id)->where('is_read', false)->count();
-                    $latest_notifications = Notification::where('user_id', $user->id)->orderBy('created_at', 'desc')->take(10)->get();
+                    $unread_notifications = $user->notifications()->where('is_read', false)->count() ?? 0;
+                    $latest_notifications = $user->notifications()->orderBy('created_at', 'desc')->take(10)->get();
                 @endphp
                 <li class="dropdown pc-h-item">
                     <a class="pc-head-link head-link-secondary dropdown-toggle arrow-none me-0"
