@@ -310,12 +310,6 @@
             });
         });
     </script>
-    <style>
-        .markdown-content p,
-        .markdown-content ul {
-            margin-bottom: 0 !important;
-        }
-    </style>
 @endsection
 @push('css')
     <style>
@@ -334,7 +328,7 @@
             top: 0;
             bottom: 0;
             width: 2px;
-            background: rgba(var(--bs-body-color-rgb), 0.5);
+            background: #dee2e6;
         }
         .timeline-item {
             position: relative;
