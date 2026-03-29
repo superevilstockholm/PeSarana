@@ -11,6 +11,9 @@ use App\Http\Controllers\AuthController;
 // Dashboard Controller
 use App\Http\Controllers\DashboardController;
 
+// Profile Controller
+use App\Http\Controllers\ProfileController;
+
 // Notification Controller
 use App\Http\Controllers\NotificationController;
 
@@ -36,6 +39,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     // Dashboard
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
+        Route::prefix('profile')->name('profile.')->group(function () {
+            Route::get('/', [ProfileController::class, 'index'])->name('index');
+            Route::match(['get', 'put'], '/edit', [ProfileController::class, 'edit'])->name('edit');
+        });
         // Admin
         Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
             Route::get('/', [DashboardController::class, 'admin_dashboard'])->name('index');

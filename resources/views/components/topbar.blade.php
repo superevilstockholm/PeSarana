@@ -111,8 +111,7 @@
                             <hr />
                             <div class="profile-notification-scroll position-relative"
                                 style="max-height: calc(100vh - 280px)">
-                                <a href="javascript:void(0);"
-                                    class="dropdown-item text-body">
+                                <a href="{{ route('dashboard.profile.index') }}" id="account-profile-button" class="dropdown-item text-body">
                                     <i class="ti ti-user"></i>
                                     <span>Account Profile</span>
                                 </a>

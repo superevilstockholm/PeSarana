@@ -93,7 +93,7 @@
                                     @foreach (RoleEnum::cases() as $role)
                                         <option value="{{ $role->value }}"
                                             {{ request('role') === $role->value ? 'selected' : '' }}>
-                                            {{ ucwords(strtolower($role->value)) }}
+                                            {{ $role->label() }}
                                         </option>
                                     @endforeach
                                 </select>
