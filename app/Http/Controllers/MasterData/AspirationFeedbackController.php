@@ -62,6 +62,9 @@ class AspirationFeedbackController extends Controller
     public function destroy(AspirationFeedback $aspirationFeedback): RedirectResponse
     {
         $aspiration = $aspirationFeedback->aspiration;
+        if ($aspiration->status === AspirationStatusEnum::COMPLETED && $aspirationFeedback->status === AspirationStatusEnum::ON_GOING) {
+            return back()->withErrors('Tidak bisa menghapus feedback dengan status proses jika aspirasi statusnya selesai dan memiliki feedback selesai.');
+        }
         if (in_array($aspiration->status, [AspirationStatusEnum::REJECTED, AspirationStatusEnum::ON_GOING])) {
             $aspiration->update(['status' => AspirationStatusEnum::PENDING]);
         } else if ($aspiration->status === AspirationStatusEnum::COMPLETED) {

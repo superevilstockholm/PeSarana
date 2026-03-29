@@ -13,7 +13,8 @@
                     class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-2 gap-lg-5">
                     <div class="d-flex flex-column">
                         <h3 class="p-0 m-0 mb-1 fw-semibold">Detail Pengguna</h3>
-                        <p class="p-0 m-0 fw-medium text-muted">Informasi lengkap pengguna: {{ $user->name ? ucwords(strtolower($user->name)) : 'N/A' }}</p>
+                        <p class="p-0 m-0 fw-medium text-muted">Informasi lengkap pengguna:
+                            {{ $user->name ? ucwords(strtolower($user->name)) : 'N/A' }}</p>
                     </div>
                     <div class="d-flex align-items-center">
                         <a href="{{ route('dashboard.admin.master-data.users.index') }}"
@@ -32,7 +33,8 @@
                     <h4 class="card-title fw-semibold mb-3">Data Pengguna</h4>
                     <div class="row mb-4">
                         <div class="col">
-                            <img class="object-fit-cover rounded" style="height: 150px; width: 150px;" src="{{ $user->profile_picture_path_url }}" alt="{{ $user->name ?? '-' }}">
+                            <img class="object-fit-cover rounded" style="height: 150px; width: 150px;"
+                                src="{{ $user->profile_picture_path_url }}" alt="{{ $user->name ?? '-' }}">
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -79,34 +81,39 @@
             <div class="card my-0">
                 <div class="card-body">
                     <h4 class="card-title fw-semibold mb-3">Aksi Cepat</h4>
-                    <a href="{{ route('dashboard.admin.master-data.users.edit', $user->id) }}" class="btn btn-warning w-100 mb-2">
+                    <a href="{{ route('dashboard.admin.master-data.users.edit', $user->id) }}"
+                        class="btn btn-warning w-100 mb-2">
                         <i class="ti ti-pencil me-1"></i> Edit Pengguna
                     </a>
-                    <form id="form-delete-{{ $user->id }}" action="{{ route('dashboard.admin.master-data.users.destroy', $user->id) }}" method="POST">
+                    <form id="form-delete-{{ $user->id }}"
+                        action="{{ route('dashboard.admin.master-data.users.destroy', $user->id) }}" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="button" class="btn btn-danger w-100 btn-delete" data-id="{{ $user->id }}" data-name="{{ $user->name }}">
+                        <button type="button" class="btn btn-danger w-100 btn-delete" data-id="{{ $user->id }}"
+                            data-name="{{ $user->name }}">
                             <i class="ti ti-trash me-1"></i> Hapus Pengguna
                         </button>
                     </form>
                     <hr class="my-4">
                     <h4 class="card-title fw-semibold mb-3">Catatan</h4>
                     <p class="text-muted small">
-                        Halaman ini hanya menampilkan detail data yang tersimpan. Untuk mengubah, klik tombol "Edit Pengguna".
+                        Halaman ini hanya menampilkan detail data yang tersimpan. Untuk mengubah, klik tombol "Edit
+                        Pengguna".
                     </p>
                 </div>
             </div>
         </div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.btn-delete').forEach(function (btn) {
-                btn.addEventListener('click', function () {
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.btn-delete').forEach(function(btn) {
+                btn.addEventListener('click', function() {
                     const userId = this.getAttribute('data-id');
                     const userName = this.getAttribute('data-name');
                     Swal.fire({
                         title: "Hapus Pengguna?",
-                        text: "Apakah Anda yakin ingin menghapus \"" + userName + "\"? Aksi ini tidak dapat dibatalkan.",
+                        text: "Apakah Anda yakin ingin menghapus \"" + userName +
+                            "\"? Aksi ini tidak dapat dibatalkan.",
                         icon: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#d33",
@@ -123,7 +130,8 @@
         });
     </script>
     <style>
-        .markdown-content p, .markdown-content ul {
+        .markdown-content p,
+        .markdown-content ul {
             margin-bottom: 0 !important;
         }
     </style>

@@ -32,7 +32,8 @@
             <div class="card my-0">
                 <div class="card-body">
                     <form method="GET" action="{{ route('dashboard.student.aspirations.index') }}" id="filterForm">
-                        <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-3 gap-2 gap-md-0">
+                        <div
+                            class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-3 gap-2 gap-md-0">
                             <div class="d-flex align-items-center">
                                 @php
                                     $limits = [5, 10, 25, 50, 100];
@@ -59,6 +60,66 @@
                                 @endif
                             </div>
                         </div>
+                        <div class="d-flex flex-column flex-md-row align-items-md-stretch mb-3 gap-2">
+                            {{-- Select Filter Type --}}
+                            <div class="form-floating" style="min-width: 180px;">
+                                @php
+                                    $filterTypes = [
+                                        'title' => 'Judul',
+                                        'content' => 'Konten',
+                                        'location' => 'Lokasi',
+                                        'status' => 'Status',
+                                        'date' => 'Tanggal Dibuat',
+                                    ];
+                                    $currentType = request('type') ?: array_key_first($filterTypes);
+                                @endphp
+                                <select class="form-select form-select-sm" id="filterType" name="type">
+                                    @foreach ($filterTypes as $key => $label)
+                                        <option value="{{ $key }}" {{ $currentType === $key ? 'selected' : '' }}>
+                                            {{ $label }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <label for="filterType">Filter berdasarkan</label>
+                            </div>
+                            {{-- Input Text for Content --}}
+                            <div class="form-floating flex-grow-1" id="filterTextWrapper">
+                                <input type="text" name="search" class="form-control form-control-sm"
+                                    id="filterTextInput" placeholder="Masukan kata kunci" value="{{ request('search') }}">
+                                <label for="filterTextInput">Masukan kata kunci</label>
+                            </div>
+                            {{-- Select Status --}}
+                            <div class="form-floating flex-grow-1 d-none" id="filterStatusWrapper">
+                                <select name="status" class="form-select form-select-sm">
+                                    <option value="">-- Pilih Status --</option>
+                                    @foreach (AspirationStatusEnum::cases() as $status)
+                                        <option value="{{ $status->value }}"
+                                            {{ request('status') === $status->value ? 'selected' : '' }}>
+                                            {{ $status->label() }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <label>Pilih Status</label>
+                            </div>
+                            {{-- Date Fields --}}
+                            <div class="form-floating flex-grow-1 d-none" id="filterStartDateWrapper">
+                                <input type="date" name="start_date" class="form-control form-control-sm"
+                                    id="filterStartDate" value="{{ request('start_date') }}">
+                                <label for="filterStartDate">Tanggal Mulai</label>
+                            </div>
+                            <div class="form-floating flex-grow-1 d-none" id="filterEndDateWrapper">
+                                <input type="date" name="end_date" class="form-control form-control-sm"
+                                    id="filterEndDate" value="{{ request('end_date') }}">
+                                <label for="filterEndDate">Tanggal Akhir</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary d-flex align-items-center justify-content-center">
+                                <i class="ti ti-search"></i> Cari
+                            </button>
+                            <a href="{{ route('dashboard.admin.master-data.aspirations.index') }}"
+                                class="btn btn-secondary d-flex align-items-center justify-content-center">
+                                <i class="ti ti-rotate-clockwise-2"></i> Reset
+                            </a>
+                        </div>
                     </form>
                     <div class="table-responsive @if (!($aspirations instanceof LengthAwarePaginator && $aspirations->hasPages())) mb-0 @else mb-3 @endif">
                         <table class="table table-striped table-hover align-middle mb-0">
@@ -84,10 +145,14 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <img class="object-fit-cover rounded" style="width: 100px; height: 100px; object-position: center;" src="{{ $aspiration->aspiration_images->first() ? $aspiration->aspiration_images->first()->image_path_url : asset('static/img/no-image-placeholder.svg') }}" alt="{{ $aspiration->title ?? '-' }}">
+                                            <img class="object-fit-cover rounded"
+                                                style="width: 100px; height: 100px; object-position: center;"
+                                                src="{{ $aspiration->aspiration_images->first() ? $aspiration->aspiration_images->first()->image_path_url : asset('static/img/no-image-placeholder.svg') }}"
+                                                alt="{{ $aspiration->title ?? '-' }}">
                                         </td>
                                         <td>{{ $aspiration->title ?? '-' }}</td>
-                                        <td>{{ $aspiration->content ? Str::limit($aspiration->content, 60, '...') : '-' }}</td>
+                                        <td>{{ $aspiration->content ? Str::limit($aspiration->content, 60, '...') : '-' }}
+                                        </td>
                                         <td>{{ $aspiration->status?->label() ?? '-' }}</td>
                                         <td>{{ $aspiration->created_at?->format('d M Y H:i') }}</td>
                                         <td class="text-center">
@@ -113,7 +178,8 @@
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="button" class="dropdown-item text-danger btn-delete"
-                                                            data-id="{{ $aspiration->id }}" data-name="{{ $aspiration->title }}">
+                                                            data-id="{{ $aspiration->id }}"
+                                                            data-name="{{ $aspiration->title }}">
                                                             <i class="ti ti-trash me-1 text-danger"></i> Hapus
                                                         </button>
                                                     </form>
@@ -152,7 +218,8 @@
                     const aspirationTitle = this.getAttribute('data-name');
                     Swal.fire({
                         title: "Hapus Aspirasi?",
-                        text: "Apakah Anda yakin ingin menghapus aspirasi \"" + aspirationTitle + "\"? Aksi ini tidak dapat dibatalkan.",
+                        text: "Apakah Anda yakin ingin menghapus aspirasi \"" +
+                            aspirationTitle + "\"? Aksi ini tidak dapat dibatalkan.",
                         icon: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#d33",
@@ -166,6 +233,40 @@
                     });
                 });
             });
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const typeSelect = document.getElementById('filterType');
+            const textInputWrapper = document.getElementById('filterTextWrapper');
+            const statusWrapper = document.getElementById('filterStatusWrapper');
+            const startDateWrapper = document.getElementById('filterStartDateWrapper');
+            const endDateWrapper = document.getElementById('filterEndDateWrapper');
+            function updateFilterFields() {
+                const value = typeSelect.value;
+                if (!value) {
+                    textInputWrapper.classList.remove('d-none');
+                    startDateWrapper.classList.add('d-none');
+                    endDateWrapper.classList.add('d-none');
+                    return;
+                }
+                if (value === 'date') {
+                    statusWrapper.classList.add('d-none');
+                    textInputWrapper.classList.add('d-none');
+                    startDateWrapper.classList.remove('d-none');
+                    endDateWrapper.classList.remove('d-none');
+                } else if (value === 'status') {
+                    statusWrapper.classList.remove('d-none');
+                    textInputWrapper.classList.add('d-none');
+                    startDateWrapper.classList.add('d-none');
+                    endDateWrapper.classList.add('d-none');
+                } else {
+                    textInputWrapper.classList.remove('d-none');
+                    startDateWrapper.classList.add('d-none');
+                    endDateWrapper.classList.add('d-none');
+                    statusWrapper.classList.add('d-none');
+                }
+            }
+            updateFilterFields();
+            typeSelect.addEventListener('change', updateFilterFields);
         });
     </script>
 @endsection
