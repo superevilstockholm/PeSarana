@@ -51,7 +51,7 @@
                     <div class="row mb-3">
                         <div class="col-md-4 text-muted">Status</div>
                         <div class="col-md-8 fw-medium">
-                            {{ $aspiration->status?->value ? ucwords(strtolower($aspiration->status->value)) : '-' }}</div>
+                            {{ $aspiration->status->label() ?? '-' }}</div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4 text-muted">Kategori</div>
@@ -98,35 +98,6 @@
                                     <div class="timeline-content">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
                                             <strong>{{ $feedback->status->label() ?? '-' }}</strong>
-                                            <div class="d-flex gap-2">
-                                                <button type="button"
-                                                    class="btn btn-sm btn-warning btn-edit-feedback"
-                                                    data-id="{{ $feedback->id }}"
-                                                    data-content="{{ $feedback->content }}">
-                                                    <i class="ti ti-edit"></i>
-                                                </button>
-                                                @if (
-                                                    $loop->last &&
-                                                    in_array($feedback->status, [
-                                                        AspirationStatusEnum::COMPLETED,
-                                                        AspirationStatusEnum::ON_GOING,
-                                                        AspirationStatusEnum::REJECTED,
-                                                    ])
-                                                )
-                                                <form action="{{ route('dashboard.admin.master-data.aspiration-feedbacks.destroy', $feedback->id) }}"
-                                                    method="POST"
-                                                    id="form-delete-feedback-{{ $feedback->id }}"
-                                                    class="m-0">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-danger btn-delete-feedback"
-                                                        data-id="{{ $feedback->id }}">
-                                                        <i class="ti ti-trash"></i>
-                                                    </button>
-                                                </form>
-                                                @endif
-                                            </div>
                                         </div>
                                         <div class="text-muted small mb-2">
                                             Oleh:
