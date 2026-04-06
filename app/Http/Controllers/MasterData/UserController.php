@@ -1,0 +1,214 @@
+<?php
+
+namespace App\Http\Controllers\MasterData;
+
+use Carbon\Carbon;
+use App\Enums\RoleEnum;
+use Illuminate\View\View;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+
+// Models
+use App\Models\User;
+use App\Models\MasterData\Student;
+use Illuminate\Support\Facades\Storage;
+
+class UserController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request): View
+    {
+        $limit = (int) $request->query('limit', 10);
+        if ($limit > 100) {
+            $limit = 100;
+        }
+        $query = User::query();
+
+        $allowed_types = [
+            'name', 'email', 'role', 'date'
+        ];
+        $type = $request->query('type');
+        if (in_array($type, $allowed_types)) {
+            if ($type === 'date') {
+                $start_date = $request->query('start_date');
+                if ($start_date) {
+                    $query->whereDate('created_at', '>=', Carbon::parse($start_date)->startOfDay());
+                }
+                $end_date = $request->query('end_date');
+                if ($end_date) {
+                    $query->whereDate('created_at', '<=', Carbon::parse($end_date)->endOfDay());
+                }
+            } else if ($type === 'role') {
+                $role = $request->query('role');
+                if ($role) {
+                    $query->where($type, $role);
+                }
+            } else {
+                $search = $request->query('search');
+                if ($search) {
+                    $query->where($type, 'ILIKE', '%' . $search . '%');
+                }
+            }
+        }
+
+        $users = $query->paginate($limit)->appends($request->except('page'));
+        return view('pages.dashboard.admin.master-data.user.index', [
+            'meta' => [
+                'sidebarItems' => adminSidebarItems(),
+            ],
+            'users' => $users,
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create(): View
+    {
+        $students = Student::whereNull('user_id')->get();
+        return view('pages.dashboard.admin.master-data.user.create', [
+            'meta' => [
+                'sidebarItems' => adminSidebarItems(),
+            ],
+            'students' => $students,
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'max:255'],
+            'role' => ['required', 'string', 'in:admin,student'],
+            'name' => ['nullable', 'required_if:role,admin', 'string', 'max:255'],
+            'student_id' => ['nullable', 'required_if:role,student', 'exists:students,id'],
+            'profile_picture_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,svg,webp', 'max:2048'],
+        ]);
+        if ($validated['role'] === 'student') {
+            $student = Student::where('id', $validated['student_id'])->first();
+            if ($student->user) {
+                return back()->withErrors('Siswa sudah memiliki akun.')->withInput($request->except('password'));
+            }
+            $validated['name'] = $student->name;
+        }
+        $validated['password'] = Hash::make($validated['password']);
+        if ($request->hasFile('profile_picture_image')) {
+            $validated['profile_picture_path'] = $request->file('profile_picture_image')->store('profile-pictures', 'public');
+        }
+        unset($validated['profile_picture_image']);
+        $user = User::create($validated);
+        if ($validated['role'] === 'student') {
+            $student->update([
+                'user_id' => $user->id,
+            ]);
+        }
+        return redirect()->route('dashboard.admin.master-data.users.index')->with('success', 'Berhasil membuat pengguna.');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(User $user): View
+    {
+        return view('pages.dashboard.admin.master-data.user.show', [
+            'meta' => [
+                'sidebarItems' => adminSidebarItems(),
+            ],
+            'user' => $user->load(['student'])->loadCount(['aspiration_feedbacks']),
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(User $user): View
+    {
+        $students = $user->role === RoleEnum::STUDENT
+            ? Student::whereNull('user_id')->orWhere('id', $user->student->id)->get()
+            : Student::whereNull('user_id')->get();
+        return view('pages.dashboard.admin.master-data.user.edit', [
+            'meta' => [
+                'sidebarItems' => adminSidebarItems(),
+            ],
+            'students' => $students,
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, User $user): RedirectResponse
+    {
+        $validated = $request->validate([
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'password' => ['nullable', 'string', 'max:255'],
+            'role' => ['required', 'string', 'in:admin,student'],
+            'name' => ['nullable', 'required_if:role,admin', 'string', 'max:255'],
+            'student_id' => ['nullable', 'required_if:role,student', 'exists:students,id'],
+            'delete_profile_picture_image' => ['nullable', 'boolean'],
+            'profile_picture_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,svg,webp', 'max:2048'],
+        ]);
+        if ($user->role === RoleEnum::STUDENT) {
+            $user->student->update([
+                'user_id' => null,
+            ]);
+        } else if ($user->role === RoleEnum::ADMIN && $validated['role'] === 'student' && $user->aspiration_feedbacks()->exists()) {
+            abort(400, 'Admin sudah pernah membuat feedback dan tidak dapat diubah menjadi student.');
+        }
+        if ($validated['role'] === 'student') {
+            $student = Student::where('id', $validated['student_id'])->first();
+            if ($student->user) {
+                return back()->withErrors('Siswa sudah memiliki akun.')->withInput($request->except('password'));
+            }
+            $validated['name'] = $student->name;
+        }
+        if (!empty($validated['password'])) {
+            $validated['password'] = Hash::make($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
+        if ($request->boolean('delete_profile_picture_image') && $user->profile_picture_path) {
+            Storage::disk('public')->delete($user->profile_picture_path);
+            $validated['profile_picture_path'] = null;
+        }
+        if ($request->hasFile('profile_picture_image')) {
+            if ($user->profile_picture_path) {
+                Storage::disk('public')->delete($user->profile_picture_path);
+            }
+            $validated['profile_picture_path'] = $request->file('profile_picture_image')->store('profile-pictures', 'public');
+        }
+        unset($validated['profile_picture_image']);
+        $user->update($validated);
+        if ($validated['role'] === 'student') {
+            $student->update([
+                'user_id' => $user->id,
+            ]);
+        }
+        return redirect()->route('dashboard.admin.master-data.users.index')->with('success', 'Berhasil mengubah pengguna.');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(User $user): RedirectResponse
+    {
+        if ($user->role === RoleEnum::STUDENT) {
+            $user->student->update([
+                'user_id' => null,
+            ]);
+        }
+        if ($user->profile_picture_path) {
+            Storage::disk('public')->delete($user->profile_picture_path);
+        }
+        $user->delete();
+        return redirect()->route('dashboard.admin.master-data.users.index')->with('success', 'Berhasil menghapus pengguna.');
+    }
+}

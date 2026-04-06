@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\MasterData;
 
+use Carbon\Carbon;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -13,8 +14,8 @@ use App\Models\MasterData\Category;
 use App\Models\MasterData\Aspiration;
 
 // Enums
-use App\Enums\AspirationStatusEnum;
 use App\Enums\RoleEnum;
+use App\Enums\AspirationStatusEnum;
 
 class AspirationController extends Controller
 {
@@ -23,17 +24,49 @@ class AspirationController extends Controller
      */
     public function index(Request $request): View
     {
-        $user_role = $request->user()->role;
+        $user = $request->user();
         $limit = (int) $request->query('limit', 10);
         if ($limit > 100) {
             $limit = 100;
         }
-        $aspirations = Aspiration::with(['student', 'category'])->paginate($limit)->appends($request->except('page'));
-        return view($user_role === RoleEnum::ADMIN
+        $query = Aspiration::query()->with(['student', 'category']);
+        if ($user->role === RoleEnum::STUDENT) {
+            $query->where('student_id', $user->student->id);
+        }
+
+        $allowed_types = [
+            'title', 'content', 'location', 'status', 'date'
+        ];
+        $type = $request->query('type');
+        if (in_array($type, $allowed_types)) {
+            if ($type === 'date') {
+                $start_date = $request->query('start_date');
+                if ($start_date) {
+                    $query->whereDate('created_at', '>=', Carbon::parse($start_date)->startOfDay());
+                }
+                $end_date = $request->query('end_date');
+                if ($end_date) {
+                    $query->whereDate('created_at', '<=', Carbon::parse($end_date)->endOfDay());
+                }
+            } else if ($type === 'status') {
+                $status = $request->query('status');
+                if ($status) {
+                    $query->where($type, $status);
+                }
+            } else {
+                $search = $request->query('search');
+                if ($search) {
+                    $query->where($type, 'ILIKE', '%' . $search . '%');
+                }
+            }
+        }
+      
+        $aspirations = $query->paginate($limit)->appends($request->except('page'));
+        return view($user->role === RoleEnum::ADMIN
             ? 'pages.dashboard.admin.master-data.aspiration.index'
             : 'pages.dashboard.student.aspiration.index', [
             'meta' => [
-                'sidebarItems' => $user_role === RoleEnum::ADMIN
+                'sidebarItems' => $user->role === RoleEnum::ADMIN
                     ? adminSidebarItems()
                     : studentSidebarItems(),
             ],
@@ -79,7 +112,7 @@ class AspirationController extends Controller
                 ]);
             }
         }
-        return redirect()->route('dashboard.student.aspirations.index')->with('success', 'Berhasil membuat aspirasi!');
+        return redirect()->route('dashboard.student.aspirations.index')->with('success', 'Berhasil membuat aspirasi.');
     }
 
     /**
@@ -87,12 +120,15 @@ class AspirationController extends Controller
      */
     public function show(Aspiration $aspiration, Request $request): View
     {
-        $user_role = $request->user()->role;
-        return view($user_role === 'admin'
+        $user = $request->user();
+        if ($user->role === RoleEnum::STUDENT && $aspiration->student_id !== $user->student->id) {
+            abort(403, 'Forbidden');
+        }
+        return view($user->role === RoleEnum::ADMIN
             ? 'pages.dashboard.admin.master-data.aspiration.show'
             : 'pages.dashboard.student.aspiration.show', [
             'meta' => [
-                'sidebarItems' => $user_role === RoleEnum::ADMIN
+                'sidebarItems' => $user->role === RoleEnum::ADMIN
                     ? adminSidebarItems()
                     : studentSidebarItems(),
             ],
@@ -109,7 +145,7 @@ class AspirationController extends Controller
             abort(403, 'Forbidden');
         }
         if ($aspiration->status !== AspirationStatusEnum::PENDING) {
-            return redirect()->route('dashboard.student.aspirations.show', $aspiration)->with('error', 'Aspirasi tidak dapat diubah!');
+            return redirect()->route('dashboard.student.aspirations.show', $aspiration)->with('error', 'Aspirasi tidak dapat diubah.');
         }
         $categories = Category::all();
         return view('pages.dashboard.student.aspiration.edit', [
@@ -130,7 +166,7 @@ class AspirationController extends Controller
             abort(403, 'Forbidden');
         }
         if ($aspiration->status !== AspirationStatusEnum::PENDING) {
-            return redirect()->route('dashboard.student.aspirations.show', $aspiration)->with('error', 'Aspirasi tidak dapat diubah!');
+            return redirect()->route('dashboard.student.aspirations.show', $aspiration)->with('error', 'Aspirasi tidak dapat diubah.');
         }
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -160,7 +196,7 @@ class AspirationController extends Controller
                 ]);
             }
         }
-        return redirect()->route('dashboard.student.aspirations.index')->with('success', 'Berhasil mengubah aspirasi!');
+        return redirect()->route('dashboard.student.aspirations.index')->with('success', 'Berhasil mengubah aspirasi.');
     }
 
     /**
@@ -168,8 +204,8 @@ class AspirationController extends Controller
      */
     public function destroy(Aspiration $aspiration, Request $request): RedirectResponse
     {
-        $user_role = $request->user()->role;
-        if ($user_role === RoleEnum::STUDENT && $request->user()->student->id !== $aspiration->student_id) {
+        $user = $request->user();
+        if ($user->role === RoleEnum::STUDENT && $user->student->id !== $aspiration->student_id) {
             abort(403, 'Forbidden');
         }
         if ($aspiration->aspiration_images()->count() > 0) {
@@ -178,8 +214,8 @@ class AspirationController extends Controller
             }
         }
         $aspiration->delete();
-        return redirect()->route($user_role === RoleEnum::ADMIN
+        return redirect()->route($user->role === RoleEnum::ADMIN
             ? 'dashboard.admin.master-data.aspirations.index'
-            : 'dashboard.student.aspirations.index')->with('success', 'Berhasil menghapus aspirasi!');
+            : 'dashboard.student.aspirations.index')->with('success', 'Berhasil menghapus aspirasi.');
     }
 }
