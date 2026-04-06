@@ -20,7 +20,12 @@
                             </div>
                             <div class="mb-2">
                                 <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control form-control-sm" id="password" name="password" value="{{ old('password') }}" autocomplete="current-password">
+                                <div class="input-group input-group-sm">
+                                    <input type="password" class="form-control" id="password" name="password" value="{{ old('password') }}" autocomplete="current-password">
+                                    <button class="btn" type="button" id="togglePassword">
+                                        <i class="bi bi-eye" id="iconToggle"></i>
+                                    </button>
+                                </div>
                             </div>
                             <x-alerts :errors="$errors"></x-alerts>
                             <p class="text-end p-0 m-0 mb-2">Lupa password? <a class="text-primary" href="#">Reset disini!</a></p>
@@ -34,3 +39,16 @@
     </div>
 </section>
 @endsection
+@push('js')
+    <script>
+        const passwordInput = document.getElementById('password');
+        const toggleBtn = document.getElementById('togglePassword');
+        const icon = document.getElementById('iconToggle');
+        toggleBtn.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            icon.classList.toggle('bi-eye');
+            icon.classList.toggle('bi-eye-slash');
+        });
+    </script>
+@endpush
