@@ -39,7 +39,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item fs-09" href="{{ route('dashboard.profile') }}">
+                                    <a class="dropdown-item fs-09" href="{{ route('dashboard.profile.index') }}">
                                         Profile
                                     </a>
                                 </li>
@@ -78,7 +78,7 @@
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item fs-09" href="{{ route('dashboard.profile') }}">
+                            <a class="dropdown-item fs-09" href="{{ route('dashboard.profile.index') }}">
                                 Profile
                             </a>
                         </li>
