@@ -73,7 +73,12 @@ html[data-bs-theme="dark"] .card {
     background-color: rgb(24, 24, 24) !important;
 }
 
-html[data-bs-theme="dark"] .form-control, html[data-bs-theme="dark"] .form-select, html[data-bs-theme="dark"] .form-check-input {
+.input-group .btn {
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    border: solid var(--bs-border-width) var(--bs-border-color);;
+}
+html[data-bs-theme="dark"] .form-control, html[data-bs-theme="dark"] .form-select, html[data-bs-theme="dark"] .form-check-input, html[data-bs-theme="dark"] .input-group .btn {
     background-color: rgb(29, 29, 29) !important;
     color: var(--bs-body-color);
     border: solid rgba(var(--bs-body-color-rgb), 0.1) var(--bs-border-width) !important;
