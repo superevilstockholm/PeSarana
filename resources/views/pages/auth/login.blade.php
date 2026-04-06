@@ -21,7 +21,7 @@
                             <div class="mb-2">
                                 <label for="password" class="form-label">Password</label>
                                 <div class="input-group input-group-sm">
-                                    <input type="password" class="form-control" id="password" name="password" value="{{ old('password') }}" autocomplete="current-password">
+                                    <input type="password" class="form-control form-control-sm" id="password" name="password" value="{{ old('password') }}" autocomplete="current-password">
                                     <button class="btn" type="button" id="togglePassword">
                                         <i class="bi bi-eye" id="iconToggle"></i>
                                     </button>
